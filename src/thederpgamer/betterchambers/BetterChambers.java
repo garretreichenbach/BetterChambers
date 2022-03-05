@@ -6,20 +6,17 @@ import api.listener.Listener;
 import api.listener.events.input.KeyPressEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
-import api.utils.element.Blocks;
+import api.network.packets.PacketUtil;
 import api.utils.game.PlayerUtils;
-import api.utils.game.SegmentControllerUtils;
 import org.apache.commons.io.IOUtils;
-import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
-import org.schema.game.common.controller.elements.RecharchableSingleModule;
-import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
 import org.schema.schine.input.KeyboardMappings;
 import org.schema.schine.resource.ResourceLoader;
 import thederpgamer.betterchambers.element.ElementManager;
 import thederpgamer.betterchambers.manager.ConfigManager;
 import thederpgamer.betterchambers.manager.LogManager;
 import thederpgamer.betterchambers.manager.ResourceManager;
+import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,6 +47,7 @@ public class BetterChambers extends StarMod {
 	private final String[] overwriteClasses = {
 			"EffectAddOn"
 	};
+	public static long lastInputMs = 0;
 	public static int lastInput = -1;
 	public static final KeyboardMappings[] movementKeys = {
 			KeyboardMappings.FORWARD_SHIP, KeyboardMappings.BACKWARDS_SHIP,
@@ -63,6 +61,7 @@ public class BetterChambers extends StarMod {
 		ConfigManager.initialize(this);
 		LogManager.initialize();
 		registerListeners();
+		registerPackets();
 	}
 
 	@Override
@@ -86,26 +85,26 @@ public class BetterChambers extends StarMod {
 			@Override
 			public void onEvent(KeyPressEvent event) {
 				int key = KeyboardMappings.getEventKeySingle(event.getRawEvent());
-				if(lastInput != -1 && lastInput == key) {
-					for(KeyboardMappings keyboardMapping : movementKeys) {
-						if(keyboardMapping.getMapping() == key && keyboardMapping.isDown(GameClient.getClientState())) {
-							PlayerControllable object = PlayerUtils.getCurrentControl(GameClient.getClientPlayerState());
-							if(object instanceof ManagedUsableSegmentController && GameClient.getClientState().isInFlightMode()) {
-								ManagedUsableSegmentController<?> segmentController = (ManagedUsableSegmentController<?>) object;
-								ReactorElement reactorElement = SegmentControllerUtils.getChamberFromElement(segmentController, Blocks.THRUST_BLAST_1.getInfo());
-								if(reactorElement != null && reactorElement.isAllValid()) {
-									RecharchableSingleModule module = segmentController.getManagerContainer().getEffectAddOnManager().get(reactorElement.getId());
-									if(module.getMaxCharges() > 1 && module.getCharges() < module.getMaxCharges()) module.setAutoChargeOn(true);
-									if(module.canExecute()) module.executeModule();
+				if(lastInput == key) {
+					if(System.currentTimeMillis() - lastInputMs < 150 && lastInputMs > 0) {
+						if(GameClient.getClientState() != null  && PlayerUtils.getCurrentControl(GameClient.getClientPlayerState()) instanceof ManagedUsableSegmentController<?> && GameClient.getClientState().isInFlightMode()) {
+							for(KeyboardMappings keyboardMapping : movementKeys) {
+								if(keyboardMapping.getMapping() == key && keyboardMapping.isDown(GameClient.getClientState())) {
+									PacketUtil.sendPacketToServer(new SendThrustBlastPacket((ManagedUsableSegmentController<?>) PlayerUtils.getCurrentControl(GameClient.getClientPlayerState())));
 									break;
-								} else return;
-							} else return;
+								}
+							}
 						}
 					}
+					lastInputMs = System.currentTimeMillis();
 				}
 				lastInput = key;
 			}
 		}, this);
+	}
+
+	private void registerPackets() {
+		PacketUtil.registerPacket(SendThrustBlastPacket.class);
 	}
 
 	private byte[] overwriteClass(String className, byte[] byteCode) {

@@ -194,12 +194,12 @@ public class EffectAddOn extends RecharchableActivatableDurationSingleModule{
 
 	@Override
 	public boolean isAutoCharging() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAutoChargeToggable() {
-		return false;
+		return true;
 	}
 
 	@Override
