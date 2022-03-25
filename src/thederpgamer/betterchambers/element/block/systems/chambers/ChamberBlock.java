@@ -4,7 +4,6 @@ import api.config.BlockConfig;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import thederpgamer.betterchambers.BetterChambers;
-import thederpgamer.betterchambers.element.ElementManager;
 
 /**
  * <Description>
@@ -19,7 +18,6 @@ public abstract class ChamberBlock {
 	public ChamberBlock(String name, short generalId, float chamberCapacity, StatusEffectType... statusEffects) {
 		blockInfo = BlockConfig.newChamber(BetterChambers.getInstance(), name, generalId, statusEffects);
 		blockInfo.chamberCapacity = chamberCapacity;
-		ElementManager.addChamber(this);
 	}
 
 	public ElementInformation getBlockInfo() {

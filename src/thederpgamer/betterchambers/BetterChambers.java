@@ -4,20 +4,28 @@ import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.input.KeyPressEvent;
+import api.listener.events.register.RegisterConfigGroupsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.packets.PacketUtil;
 import api.utils.game.PlayerUtils;
+import api.utils.textures.GraphicsOperator;
+import api.utils.textures.StarLoaderTexture;
 import org.apache.commons.io.IOUtils;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
 import org.schema.schine.input.KeyboardMappings;
 import org.schema.schine.resource.ResourceLoader;
 import thederpgamer.betterchambers.element.ElementManager;
+import thederpgamer.betterchambers.element.block.systems.chambers.offense.AIChamber;
+import thederpgamer.betterchambers.element.block.systems.chambers.offense.ReactorOffenseChamber;
 import thederpgamer.betterchambers.manager.ConfigManager;
 import thederpgamer.betterchambers.manager.LogManager;
 import thederpgamer.betterchambers.manager.ResourceManager;
 import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
+import thederpgamer.betterchambers.systems.chambers.offense.AIEffectGroup;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -62,6 +70,7 @@ public class BetterChambers extends StarMod {
 		LogManager.initialize();
 		registerListeners();
 		registerPackets();
+		overwriteTextures();
 	}
 
 	@Override
@@ -77,10 +86,19 @@ public class BetterChambers extends StarMod {
 
 	@Override
 	public void onBlockConfigLoad(BlockConfig config) {
+		ElementManager.addBlock(new ReactorOffenseChamber());
+		ElementManager.addChamber(new AIChamber.AIEnhancementChamber());
 		ElementManager.initialize();
 	}
 
 	private void registerListeners() {
+		StarLoader.registerListener(RegisterConfigGroupsEvent.class, new Listener<RegisterConfigGroupsEvent>() {
+			@Override
+			public void onEvent(RegisterConfigGroupsEvent event) {
+				event.getModConfigGroups().enqueue(new AIEffectGroup.AIBaseEnhancementEffect());
+			}
+		}, this);
+
 		StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
 			@Override
 			public void onEvent(KeyPressEvent event) {
@@ -105,6 +123,15 @@ public class BetterChambers extends StarMod {
 
 	private void registerPackets() {
 		PacketUtil.registerPacket(SendThrustBlastPacket.class);
+	}
+
+	private void overwriteTextures() {
+		StarLoaderTexture.addSpriteChange("gui/ingame/UI 64px ChamberTabs-4x4-gui-", new GraphicsOperator() {
+			@Override
+			public void apply(BufferedImage bufferedImage, Graphics graphics) {
+				bufferedImage.setData(getJarBufferedImage("thederpgamer/betterchambers/resources/sprites/reactor-chamber-tab-icons.png").getData());
+			}
+		});
 	}
 
 	private byte[] overwriteClass(String className, byte[] byteCode) {

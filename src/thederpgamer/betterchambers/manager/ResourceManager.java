@@ -15,11 +15,13 @@ import java.util.HashMap;
 public class ResourceManager {
 
 	private static final String[] textureNames = {
-
+			"offense-chamber",
+			"offense-chamber-active",
+			"offense-chamber-icon"
 	};
 
 	private static final String[] spriteNames = {
-
+			"reactor-chamber-tab-icons"
 	};
 
 	private static final HashMap<String, StarLoaderTexture> textureMap = new HashMap<>();
