@@ -32,6 +32,7 @@ public class ReactorOffenseChamber extends Block {
 		blockInfo.shoppable = true;
 		blockInfo.price = ElementKeyMap.getInfo(991).price;
 		blockInfo.mass = ElementKeyMap.getInfo(991).mass;
+		blockInfo.volume = ElementKeyMap.getInfo(991).volume;
 
 		blockInfo.chamberPermission = 1;
 		blockInfo.blockResourceType = 2;

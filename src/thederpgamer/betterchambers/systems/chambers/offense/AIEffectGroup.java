@@ -1,11 +1,13 @@
 package thederpgamer.betterchambers.systems.chambers.offense;
 
-import org.schema.game.common.data.blockeffects.config.ConfigGroup;
 import org.schema.game.common.data.blockeffects.config.EffectConfigElement;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.blockeffects.config.elements.ModifierStackType;
 import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectFloatValue;
 import thederpgamer.betterchambers.manager.ConfigManager;
+import thederpgamer.betterchambers.systems.chambers.ConfigEffectGroup;
+
+import java.util.ArrayList;
 
 /**
  * <Description>
@@ -15,33 +17,35 @@ import thederpgamer.betterchambers.manager.ConfigManager;
  */
 public class AIEffectGroup {
 
-	public static class AIBaseEnhancementEffect extends ConfigGroup {
+	public static class AIBaseEnhancementEffect extends ConfigEffectGroup {
 
 		public AIBaseEnhancementEffect() {
 			super("ai_base_enhancement_effect");
+		}
+
+		@Override
+		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Base
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.AI_ACCURACY_TURRET);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = 0;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(1.0f);
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
 			{ //Turret Accuracy
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.AI_ACCURACY_TURRET);
-				configElement.stackType = ModifierStackType.MULT;
-				configElement.priority = 0;
+				configElement.stackType = ModifierStackType.ADD;
+				configElement.priority = 1;
 				StatusEffectFloatValue value = new StatusEffectFloatValue();
 				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("ai-base-enhancement-chamber-turret-accuracy-multiplier", 0.2f));
 				configElement.value = value;
-				elements.add(configElement);
+				elementList.add(configElement);
 			}
-
-			/*
-			{ //PD Accuracy
-				EffectConfigElement configElement = new EffectConfigElement();
-				configElement.init(StatusEffectType.AI_ACCURACY_POINT_DEFENSE);
-				configElement.stackType = ModifierStackType.MULT;
-				configElement.priority = 0;
-				StatusEffectFloatValue value = new StatusEffectFloatValue();
-				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("ai-base-enhancement-chamber-pd-accuracy-multiplier", 1.3f));
-				configElement.value = value;
-				elements.add(configElement);
-			}
-			 */
 		}
 	}
 }

@@ -16,12 +16,14 @@ import org.schema.game.common.controller.ManagedUsableSegmentController;
 import org.schema.schine.input.KeyboardMappings;
 import org.schema.schine.resource.ResourceLoader;
 import thederpgamer.betterchambers.element.ElementManager;
+import thederpgamer.betterchambers.element.block.systems.chambers.defense.EnvironmentalArmorChamber3;
 import thederpgamer.betterchambers.element.block.systems.chambers.offense.AIChamber;
 import thederpgamer.betterchambers.element.block.systems.chambers.offense.ReactorOffenseChamber;
 import thederpgamer.betterchambers.manager.ConfigManager;
 import thederpgamer.betterchambers.manager.LogManager;
 import thederpgamer.betterchambers.manager.ResourceManager;
 import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
+import thederpgamer.betterchambers.systems.chambers.defense.EnvironmentalArmor3Effect;
 import thederpgamer.betterchambers.systems.chambers.offense.AIEffectGroup;
 
 import java.awt.*;
@@ -88,6 +90,7 @@ public class BetterChambers extends StarMod {
 	public void onBlockConfigLoad(BlockConfig config) {
 		ElementManager.addBlock(new ReactorOffenseChamber());
 		ElementManager.addChamber(new AIChamber.AIEnhancementChamber());
+		ElementManager.addChamber(new EnvironmentalArmorChamber3());
 		ElementManager.initialize();
 	}
 
@@ -96,6 +99,7 @@ public class BetterChambers extends StarMod {
 			@Override
 			public void onEvent(RegisterConfigGroupsEvent event) {
 				event.getModConfigGroups().enqueue(new AIEffectGroup.AIBaseEnhancementEffect());
+				event.getModConfigGroups().enqueue(new EnvironmentalArmor3Effect());
 			}
 		}, this);
 

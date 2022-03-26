@@ -28,10 +28,11 @@ public class AIChamber {
 				short textureId = (short) ResourceManager.getTexture("offense-chamber-active").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
+			blockInfo.setDescription("Base increase for AI turret accuracy.");
 			blockInfo.setPlacable(false);
 			blockInfo.setInRecipe(false);
 			blockInfo.shoppable = false;
-			blockInfo.setDescription("Base increase for AI turret accuracy.");
+			blockInfo.chamberPrerequisites.clear();
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Offense Chamber").getId();
 			blockInfo.chamberConfigGroupsLowerCase.add("ai_base_enhancement_effect");
 			ElementManager.getBlock("Reactor Offense Chamber").getBlockInfo().chamberChildren.add(getId());
