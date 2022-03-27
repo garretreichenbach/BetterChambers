@@ -125,6 +125,8 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 	@Override
 	public void onInactive() {
 		if(ticks >= UPDATE_TIMER) {
+			removeEntityEffects();
+			targetingEntities.clear();
 			onReactorRecalibrate(null);
 			ticks = 0;
 		} else ticks ++;
