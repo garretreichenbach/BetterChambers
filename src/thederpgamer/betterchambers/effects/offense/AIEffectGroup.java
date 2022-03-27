@@ -1,11 +1,11 @@
-package thederpgamer.betterchambers.systems.chambers.offense;
+package thederpgamer.betterchambers.effects.offense;
 
 import org.schema.game.common.data.blockeffects.config.EffectConfigElement;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.blockeffects.config.elements.ModifierStackType;
 import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectFloatValue;
 import thederpgamer.betterchambers.manager.ConfigManager;
-import thederpgamer.betterchambers.systems.chambers.ConfigEffectGroup;
+import thederpgamer.betterchambers.effects.ConfigEffectGroup;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ public class AIEffectGroup {
 				configElement.stackType = ModifierStackType.ADD;
 				configElement.priority = 1;
 				StatusEffectFloatValue value = new StatusEffectFloatValue();
-				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("ai-base-enhancement-chamber-turret-accuracy-multiplier", 0.2f));
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("ai-base-enhancement-chamber-turret-accuracy-add", 0.2f));
 				configElement.value = value;
 				elementList.add(configElement);
 			}

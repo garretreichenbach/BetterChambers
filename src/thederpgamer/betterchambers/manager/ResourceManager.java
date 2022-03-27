@@ -17,7 +17,10 @@ public class ResourceManager {
 	private static final String[] textureNames = {
 			"offense-chamber",
 			"offense-chamber-active",
-			"offense-chamber-icon"
+			"offense-chamber-icon",
+			"support-chamber",
+			"support-chamber-active",
+			"support-chamber-icon"
 	};
 
 	private static final String[] spriteNames = {

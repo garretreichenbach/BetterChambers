@@ -1,4 +1,4 @@
-package thederpgamer.betterchambers.systems.chambers;
+package thederpgamer.betterchambers.effects;
 
 import org.schema.game.common.data.blockeffects.config.ConfigGroup;
 import org.schema.game.common.data.blockeffects.config.EffectConfigElement;
@@ -13,11 +13,14 @@ import java.util.ArrayList;
  */
 public abstract class ConfigEffectGroup extends ConfigGroup {
 
+	public static ConfigEffectGroup instance;
+
 	public ConfigEffectGroup(String effectIdentifier) {
 		super(effectIdentifier);
 		ArrayList<EffectConfigElement> elementList = new ArrayList<>();
 		createElements(elementList);
 		elements.addAll(elementList);
+		instance = this;
 	}
 
 	public abstract void createElements(ArrayList<EffectConfigElement> elementList);
