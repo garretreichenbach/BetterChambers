@@ -118,11 +118,11 @@ public class BetterChambers extends StarMod {
 			@Override
 			public void onEvent(RegisterConfigGroupsEvent event) {
 				event.getModConfigGroups().enqueue(new AIEffectGroup.AIBaseEnhancementEffect());
+				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraBaseEffect());
 				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraRangeBoostEffect1());
 				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraRangeBoostEffect2());
 				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraRangeBoostEffect3());
 				event.getModConfigGroups().enqueue(new ShieldAuraEffectGroup.ShieldAuraBaseEffect());
-				event.getModConfigGroups().enqueue(new ShieldAuraEffectGroup.ShieldAuraBaseTargetEffect());
 				event.getModConfigGroups().enqueue(new EnvironmentalArmor3Effect());
 			}
 		}, this);

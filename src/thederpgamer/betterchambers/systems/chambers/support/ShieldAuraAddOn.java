@@ -9,7 +9,8 @@ import api.utils.sound.AudioUtils;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
-import org.schema.game.common.data.blockeffects.config.*;
+import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.faction.FactionRelation;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
@@ -35,8 +36,8 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 	private int ticks = 0;
 	private int maxTargets = 0;
 	private float maxRange = 0.0f;
-	private float shieldCapBoost = 1.0f;
-	private float shieldUpkeepReduction = 0.0f;
+	//private float shieldCapBoost = 1.0f;
+	//private float shieldUpkeepReduction = 0.0f;
 
 	private final ArrayList<ManagedUsableSegmentController<?>> targetingEntities = new ArrayList<>();
 
@@ -50,12 +51,17 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 		try {
 			ReactorElement shieldAura = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Base").getBlockInfo());
 			usable = shieldAura != null && shieldAura.isAllValid();
-			ConfigEntityManager configManager = getManagedSegmentController().getManagerContainer().getMainReactor().getConfigManager();
+			ConfigEntityManager configManager = getManagerUsableSegmentController().getConfigManager();
 			if(configManager.getModules().containsKey(StatusEffectType.AURA_MAX_TARGETS)) maxTargets = configManager.getModules().get(StatusEffectType.AURA_MAX_TARGETS).getIntValue();
 			if(configManager.getModules().containsKey(StatusEffectType.AURA_RANGE)) maxRange = (configManager.getModules().get(StatusEffectType.AURA_RANGE).getFloatValue()) * (Integer) ServerConfig.SECTOR_SIZE.getCurrentState();
-			if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_CAP)) shieldCapBoost = configManager.getModules().get(StatusEffectType.AURA_SHIELD_CAP).getFloatValue();
-			if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION)) shieldUpkeepReduction = configManager.getModules().get(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION).getFloatValue();
+			//if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_CAP)) shieldCapBoost = configManager.getModules().get(StatusEffectType.AURA_SHIELD_CAP).getFloatValue();
+			//if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION)) shieldUpkeepReduction = configManager.getModules().get(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION).getFloatValue();
 		} catch (Exception ignored) { }
+	}
+
+	@Override
+	public boolean isDeactivatableManually() {
+		return isActive();
 	}
 
 	@Override
@@ -80,7 +86,6 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 
 	@Override
 	public float getDuration() {
-		if(isActive()) return 0;
 		return -1;
 	}
 
@@ -141,7 +146,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 			if(!toRemove.isEmpty()) {
 				for(ManagedUsableSegmentController<?> target : toRemove) {
 					if(target.getId() != getSegmentController().getId()) {
-						target.getManagerContainer().getMainReactor().getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseTargetEffect.instance, false, target.getNetworkObject());
+						target.getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, target.getNetworkObject());
 					}
 				}
 			}
@@ -157,13 +162,13 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 			for(SimpleTransformableSendableObject<?> object : sector.getEntities()) {
 				if(object instanceof ManagedUsableSegmentController<?>) {
 					ManagedUsableSegmentController<?> entity = (ManagedUsableSegmentController<?>) object;
-					if(entity.getId() != getSegmentController().getId()) {
+					if(entity.getId() != getManagedSegmentController().getSegmentController().getId()) {
 						int currentFactionId = getSegmentController().getFactionId();
 						int entityFactionId = entity.getFactionId();
 						if(currentFactionId > 0 && entityFactionId > 0 && GameCommon.getGameState().getFactionManager().getRelation(currentFactionId, entityFactionId).equals(FactionRelation.RType.FRIEND)) {
 							float distance = EntityUtils.getDistance(entity, getSegmentController());
 							if(distance <= maxRange && targetCount < maxTargets && !targetingEntities.contains(entity)) {
-								entity.getManagerContainer().getMainReactor().getConfigManager().addEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseTargetEffect.instance, false, entity.getNetworkObject());
+								entity.getConfigManager().addEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, entity.getNetworkObject());
 								targetingEntities.add(entity);
 								targetCount ++;
 							} else if(targetCount >= maxTargets) return;
@@ -179,7 +184,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 		if(sector != null) {
 			for(ManagedUsableSegmentController<?> entity : targetingEntities) {
 				if(entity.getId() != getSegmentController().getId()) {
-					entity.getManagerContainer().getMainReactor().getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseTargetEffect.instance, false, entity.getNetworkObject());
+					entity.getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, entity.getNetworkObject());
 				}
 			}
 		}

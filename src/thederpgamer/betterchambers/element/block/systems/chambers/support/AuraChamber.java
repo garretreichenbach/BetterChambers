@@ -115,7 +115,7 @@ public class AuraChamber {
 			blockInfo.setInRecipe(false);
 			blockInfo.reactorHp = 20;
 			blockInfo.shoppable = false;
-			blockInfo.chamberConfigGroupsLowerCase.add("shield_aura_base_effect");
+			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());

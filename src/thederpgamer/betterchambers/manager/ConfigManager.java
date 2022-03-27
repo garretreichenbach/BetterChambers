@@ -20,13 +20,13 @@ public class ConfigManager {
 	private static FileConfiguration systemConfig;
 	private static final String[] defaultSystemConfig = {
 			"ai-base-enhancement-chamber-turret-accuracy-add: 0.2",
+			"aura-base-chamber-range-set: 0.5",
+			"aura-base-chamber-max-targets-set: 1",
 			"aura-range-chamber-1-range-add: 0.5",
 			"aura-range-chamber-2-range-add: 0.5",
 			"aura-range-chamber-3-range-add: 0.5",
-			"shield-boost-aura-base-chamber-range-set: 0.5",
-			"shield-boost-aura-base-chamber-max-targets-set: 1",
-			"shield-boost-aura-base-chamber-capacity-add: 0.15",
-			"shield-boost-aura-base-chamber-upkeep-reduction-add: 0.15"
+			"shield-boost-aura-chamber-capacity-add: 0.15",
+			"shield-boost-aura-chamber-upkeep-reduction-add: 0.15"
 	};
 
 	public static void initialize(BetterChambers instance) {
