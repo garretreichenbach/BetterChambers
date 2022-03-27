@@ -36,8 +36,6 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 	private int ticks = 0;
 	private int maxTargets = 0;
 	private float maxRange = 0.0f;
-	//private float shieldCapBoost = 1.0f;
-	//private float shieldUpkeepReduction = 0.0f;
 
 	private final ArrayList<ManagedUsableSegmentController<?>> targetingEntities = new ArrayList<>();
 
@@ -54,8 +52,6 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 			ConfigEntityManager configManager = getManagerUsableSegmentController().getConfigManager();
 			if(configManager.getModules().containsKey(StatusEffectType.AURA_MAX_TARGETS)) maxTargets = configManager.getModules().get(StatusEffectType.AURA_MAX_TARGETS).getIntValue();
 			if(configManager.getModules().containsKey(StatusEffectType.AURA_RANGE)) maxRange = (configManager.getModules().get(StatusEffectType.AURA_RANGE).getFloatValue()) * (Integer) ServerConfig.SECTOR_SIZE.getCurrentState();
-			//if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_CAP)) shieldCapBoost = configManager.getModules().get(StatusEffectType.AURA_SHIELD_CAP).getFloatValue();
-			//if(configManager.getModules().containsKey(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION)) shieldUpkeepReduction = configManager.getModules().get(StatusEffectType.AURA_SHIELD_UPKEEP_REDUCTION).getFloatValue();
 		} catch (Exception ignored) { }
 	}
 
