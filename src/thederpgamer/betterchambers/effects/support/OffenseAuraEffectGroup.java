@@ -28,17 +28,6 @@ public class OffenseAuraEffectGroup {
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
-            { //Set Base Weapon Range
-                EffectConfigElement configElement = new EffectConfigElement();
-                configElement.init(StatusEffectType.WEAPON_RANGE);
-                configElement.stackType = ModifierStackType.SET;
-                configElement.priority = -1;
-                StatusEffectFloatValue value = new StatusEffectFloatValue();
-                value.value.set(1.0f);
-                configElement.value = value;
-                elementList.add(configElement);
-            }
-
             { //Set Base Turret Accuracy
                 EffectConfigElement configElement = new EffectConfigElement();
                 configElement.init(StatusEffectType.AI_ACCURACY_TURRET);
@@ -118,16 +107,7 @@ public class OffenseAuraEffectGroup {
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
-            { //Weapon Range
-                EffectConfigElement configElement = new EffectConfigElement();
-                configElement.init(StatusEffectType.WEAPON_RANGE);
-                configElement.stackType = ModifierStackType.ADD;
-                configElement.priority = 1;
-                StatusEffectFloatValue value = new StatusEffectFloatValue();
-                value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("targeting-1-aura-chamber-weapon-range-add", 0.1f));
-                configElement.value = value;
-                elementList.add(configElement);
-            }
+
         }
     }
 
@@ -142,16 +122,7 @@ public class OffenseAuraEffectGroup {
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
-            { //Weapon Range
-                EffectConfigElement configElement = new EffectConfigElement();
-                configElement.init(StatusEffectType.WEAPON_RANGE);
-                configElement.stackType = ModifierStackType.ADD;
-                configElement.priority = 1;
-                StatusEffectFloatValue value = new StatusEffectFloatValue();
-                value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("targeting-2-aura-chamber-weapon-range-add", 0.2f));
-                configElement.value = value;
-                elementList.add(configElement);
-            }
+
         }
     }
 }

@@ -85,17 +85,6 @@ public class ShieldAuraEffectGroup {
 
 		@Override
 		public void createElements(ArrayList<EffectConfigElement> elementList) {
-			{ //Set Capacity
-				EffectConfigElement configElement = new EffectConfigElement();
-				configElement.init(StatusEffectType.SHIELD_CAPACITY);
-				configElement.stackType = ModifierStackType.SET;
-				configElement.priority = -1;
-				StatusEffectFloatValue value = new StatusEffectFloatValue();
-				value.value.set(1.0f);
-				configElement.value = value;
-				elementList.add(configElement);
-			}
-
 			{ //Add Capacity
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY);
@@ -120,17 +109,6 @@ public class ShieldAuraEffectGroup {
 
 		@Override
 		public void createElements(ArrayList<EffectConfigElement> elementList) {
-			{ //Set Capacity
-				EffectConfigElement configElement = new EffectConfigElement();
-				configElement.init(StatusEffectType.SHIELD_CAPACITY);
-				configElement.stackType = ModifierStackType.SET;
-				configElement.priority = -1;
-				StatusEffectFloatValue value = new StatusEffectFloatValue();
-				value.value.set(1.0f);
-				configElement.value = value;
-				elementList.add(configElement);
-			}
-
 			{ //Add Capacity
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY);

@@ -93,6 +93,33 @@ public class AuraChamber {
 		}
 	}
 
+	public static class AuraProjectorChamber extends ChamberBlock {
+
+		public AuraProjectorChamber() {
+			super("Aura Projector", (short) 991, 0.02f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Base chamber for Aura systems.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			addChildren(ElementManager.getChamber("Shield Aura Base"), ElementManager.getChamber("Offense Aura Base"));
+			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
 	public static class ShieldAuraBaseChamber extends ChamberBlock {
 
 		public ShieldAuraBaseChamber() {
@@ -106,16 +133,15 @@ public class AuraChamber {
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
-			blockInfo.setDescription("Base chamber for Shield Aura systems.");
+			blockInfo.setDescription("Enables shield boosting effects for the Aura Projector.");
 			blockInfo.setPlacable(false);
 			blockInfo.setInRecipe(false);
 			blockInfo.reactorHp = 20;
 			blockInfo.shoppable = false;
-			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
+			blockInfo.chamberConfigGroupsLowerCase.add("shield_aura_base_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			addExclusives(ElementManager.getChamber("Offense Aura Base"));
 			addChildren(ElementManager.getChamber("Shield Aura Capacity 1"));
-			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
 		}
@@ -185,16 +211,15 @@ public class AuraChamber {
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
-			blockInfo.setDescription("Base chamber for Offense Aura systems.");
+			blockInfo.setDescription("Enables offensive effects for the Aura Projector.");
 			blockInfo.setPlacable(false);
 			blockInfo.setInRecipe(false);
 			blockInfo.reactorHp = 20;
 			blockInfo.shoppable = false;
-			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
+			blockInfo.chamberConfigGroupsLowerCase.add("offense_aura_base_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			addExclusives(ElementManager.getChamber("Shield Aura Base"));
 			addChildren(ElementManager.getChamber("Offense Aura Targeting 1"));
-			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
 		}

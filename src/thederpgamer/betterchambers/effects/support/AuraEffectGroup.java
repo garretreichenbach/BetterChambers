@@ -30,7 +30,7 @@ public class AuraEffectGroup {
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.AURA_RANGE);
 				configElement.stackType = ModifierStackType.SET;
-				configElement.priority = 0;
+				configElement.priority = -1;
 				StatusEffectFloatValue value = new StatusEffectFloatValue();
 				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-base-chamber-range-set", 0.5f));
 				configElement.value = value;
@@ -41,7 +41,7 @@ public class AuraEffectGroup {
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.AURA_MAX_TARGETS);
 				configElement.stackType = ModifierStackType.SET;
-				configElement.priority = 0;
+				configElement.priority = -1;
 				StatusEffectIntValue value = new StatusEffectIntValue();
 				value.value.set(ConfigManager.getSystemConfig().getConfigurableInt("aura-base-chamber-max-targets-set", 1));
 				configElement.value = value;
