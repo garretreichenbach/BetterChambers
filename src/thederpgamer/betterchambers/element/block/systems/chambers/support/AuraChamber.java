@@ -35,6 +35,7 @@ public class AuraChamber {
 			blockInfo.shoppable = false;
 			blockInfo.chamberConfigGroupsLowerCase.add("aura_range_boost_effect_1");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			setUpgrade(ElementManager.getChamber("Aura Range Boost 2"));
 			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
@@ -60,10 +61,8 @@ public class AuraChamber {
 			blockInfo.reactorHp = 20;
 			blockInfo.shoppable = false;
 			blockInfo.chamberConfigGroupsLowerCase.add("aura_range_boost_effect_2");
-			blockInfo.chamberParent = ElementManager.getChamber("Aura Range Boost 1").getId();
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
-			ElementManager.getChamber("Aura Range Boost 1").getBlockInfo().chamberChildren.add(getId());
-			ElementManager.getChamber("Aura Range Boost 1").getBlockInfo().chamberUpgradesTo = getId();
+			setUpgrade(ElementManager.getChamber("Aura Range Boost 3"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
 		}
@@ -72,7 +71,7 @@ public class AuraChamber {
 	public static class AuraRangeBoostChamber3 extends ChamberBlock {
 
 		public AuraRangeBoostChamber3() {
-			super("Aura Range Boost 3", (short) 991, 0.10f);
+			super("Aura Range Boost 3", (short) 991, 0.15f);
 		}
 
 		@Override
@@ -88,10 +87,7 @@ public class AuraChamber {
 			blockInfo.reactorHp = 20;
 			blockInfo.shoppable = false;
 			blockInfo.chamberConfigGroupsLowerCase.add("aura_range_boost_effect_3");
-			blockInfo.chamberParent = ElementManager.getChamber("Aura Range Boost 2").getId();
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
-			ElementManager.getChamber("Aura Range Boost 2").getBlockInfo().chamberChildren.add(getId());
-			ElementManager.getChamber("Aura Range Boost 2").getBlockInfo().chamberUpgradesTo = getId();
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
 		}
@@ -117,7 +113,139 @@ public class AuraChamber {
 			blockInfo.shoppable = false;
 			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			addExclusives(ElementManager.getChamber("Offense Aura Base"));
+			addChildren(ElementManager.getChamber("Shield Aura Capacity 1"));
 			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
+	public static class ShieldAuraCapacityChamber1 extends ChamberBlock {
+
+		public ShieldAuraCapacityChamber1() {
+			super("Shield Aura Capacity 1", (short) 991, 0.10f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Boosts the shield capacity of ships affected by this aura.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("shield_aura_cap_1_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			setUpgrade(ElementManager.getChamber("Shield Aura Capacity 2"));
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
+	public static class ShieldAuraCapacityChamber2 extends ChamberBlock {
+
+		public ShieldAuraCapacityChamber2() {
+			super("Shield Aura Capacity 2", (short) 991, 0.15f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Further boosts the shield capacity of ships affected by this aura.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("shield_aura_cap_2_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
+	public static class OffenseAuraBaseChamber extends ChamberBlock {
+
+		public OffenseAuraBaseChamber() {
+			super("Offense Aura Base", (short) 991, 0.05f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Base chamber for Offense Aura systems.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("aura_base_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			addExclusives(ElementManager.getChamber("Shield Aura Base"));
+			addChildren(ElementManager.getChamber("Offense Aura Targeting 1"));
+			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
+	public static class OffenseAuraTargetingChamber1 extends ChamberBlock {
+
+		public OffenseAuraTargetingChamber1() {
+			super("Offense Aura Targeting 1", (short) 991, 0.10f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Boosts the AI range and accuracy of ships and turrets affected by this aura.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("offense_aura_targeting_1_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
+			setUpgrade(ElementManager.getChamber("Offense Aura Targeting 2"));
+			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
+			BlockConfig.add(blockInfo);
+		}
+	}
+
+	public static class OffenseAuraTargetingChamber2 extends ChamberBlock {
+
+		public OffenseAuraTargetingChamber2() {
+			super("Offense Aura Targeting 2", (short) 991, 0.15f);
+		}
+
+		@Override
+		public void initialize() {
+			if(GraphicsContext.initialized) {
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
+			}
+			blockInfo.setDescription("Further boosts the AI range and accuracy of ships and turrets affected by this aura.");
+			blockInfo.setPlacable(false);
+			blockInfo.setInRecipe(false);
+			blockInfo.reactorHp = 20;
+			blockInfo.shoppable = false;
+			blockInfo.chamberConfigGroupsLowerCase.add("offense_aura_targeting_2_effect");
+			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
 			BlockConfig.add(blockInfo);
 		}

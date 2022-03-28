@@ -39,7 +39,7 @@ public class ShieldAuraEffectGroup {
 				elementList.add(configElement);
 			}
 
-			{ //Set Capacity
+			{ //Set Upkeep
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY_UPKEEP);
 				configElement.stackType = ModifierStackType.SET;
@@ -68,6 +68,76 @@ public class ShieldAuraEffectGroup {
 				configElement.priority = 1;
 				StatusEffectFloatValue value = new StatusEffectFloatValue();
 				value.value.set(-ConfigManager.getSystemConfig().getConfigurableFloat("shield-boost-aura-chamber-upkeep-reduction-add", 0.15f));
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+		}
+	}
+
+	public static class ShieldAuraCapacity1Effect extends ConfigEffectGroup {
+
+		public static ShieldAuraCapacity1Effect instance;
+
+		public ShieldAuraCapacity1Effect() {
+			super("shield_aura_cap_1_effect");
+			instance = this;
+		}
+
+		@Override
+		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Capacity
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.SHIELD_CAPACITY);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = -1;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(1.0f);
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
+			{ //Add Capacity
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.SHIELD_CAPACITY);
+				configElement.stackType = ModifierStackType.ADD;
+				configElement.priority = 2;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("shield-capacity-1-aura-chamber-add", 0.1f));
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+		}
+	}
+
+	public static class ShieldAuraCapacity2Effect extends ConfigEffectGroup {
+
+		public static ShieldAuraCapacity2Effect instance;
+
+		public ShieldAuraCapacity2Effect() {
+			super("shield_aura_cap_2_effect");
+			instance = this;
+		}
+
+		@Override
+		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Capacity
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.SHIELD_CAPACITY);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = -1;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(1.0f);
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
+			{ //Add Capacity
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.SHIELD_CAPACITY);
+				configElement.stackType = ModifierStackType.ADD;
+				configElement.priority = 2;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("shield-capacity-2-aura-chamber-add", 0.2f));
 				configElement.value = value;
 				elementList.add(configElement);
 			}

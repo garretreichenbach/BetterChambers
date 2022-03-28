@@ -20,6 +20,7 @@ import org.schema.schine.resource.ResourceLoader;
 import thederpgamer.betterchambers.effects.defense.EnvironmentalArmor3Effect;
 import thederpgamer.betterchambers.effects.offense.AIEffectGroup;
 import thederpgamer.betterchambers.effects.support.AuraEffectGroup;
+import thederpgamer.betterchambers.effects.support.OffenseAuraEffectGroup;
 import thederpgamer.betterchambers.effects.support.ShieldAuraEffectGroup;
 import thederpgamer.betterchambers.element.ElementManager;
 import thederpgamer.betterchambers.element.block.systems.chambers.defense.EnvironmentalArmorChamber3;
@@ -31,6 +32,7 @@ import thederpgamer.betterchambers.manager.ConfigManager;
 import thederpgamer.betterchambers.manager.LogManager;
 import thederpgamer.betterchambers.manager.ResourceManager;
 import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
+import thederpgamer.betterchambers.systems.chambers.support.OffenseAuraAddOn;
 import thederpgamer.betterchambers.systems.chambers.support.ShieldAuraAddOn;
 
 import java.awt.*;
@@ -104,6 +106,11 @@ public class BetterChambers extends StarMod {
 		ElementManager.addChamber(new AuraChamber.AuraRangeBoostChamber2());
 		ElementManager.addChamber(new AuraChamber.AuraRangeBoostChamber3());
 		ElementManager.addChamber(new AuraChamber.ShieldAuraBaseChamber());
+		ElementManager.addChamber(new AuraChamber.ShieldAuraCapacityChamber1());
+		ElementManager.addChamber(new AuraChamber.ShieldAuraCapacityChamber2());
+		ElementManager.addChamber(new AuraChamber.OffenseAuraBaseChamber());
+		ElementManager.addChamber(new AuraChamber.OffenseAuraTargetingChamber1());
+		ElementManager.addChamber(new AuraChamber.OffenseAuraTargetingChamber2());
 		ElementManager.addChamber(new EnvironmentalArmorChamber3());
 		ElementManager.initialize();
 	}
@@ -111,6 +118,7 @@ public class BetterChambers extends StarMod {
 	@Override
 	public void onUniversalRegistryLoad() {
 		UniversalRegistry.registerURV(UniversalRegistry.RegistryType.PLAYER_USABLE_ID, getSkeleton(), "ShieldAuraAddOn");
+		UniversalRegistry.registerURV(UniversalRegistry.RegistryType.PLAYER_USABLE_ID, getSkeleton(), "OffenseAuraAddOn");
 	}
 
 	private void registerListeners() {
@@ -123,6 +131,11 @@ public class BetterChambers extends StarMod {
 				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraRangeBoostEffect2());
 				event.getModConfigGroups().enqueue(new AuraEffectGroup.AuraRangeBoostEffect3());
 				event.getModConfigGroups().enqueue(new ShieldAuraEffectGroup.ShieldAuraBaseEffect());
+				event.getModConfigGroups().enqueue(new ShieldAuraEffectGroup.ShieldAuraCapacity1Effect());
+				event.getModConfigGroups().enqueue(new ShieldAuraEffectGroup.ShieldAuraCapacity2Effect());
+				event.getModConfigGroups().enqueue(new OffenseAuraEffectGroup.OffenseAuraBaseEffect());
+				event.getModConfigGroups().enqueue(new OffenseAuraEffectGroup.OffenseAuraTargeting1Effect());
+				event.getModConfigGroups().enqueue(new OffenseAuraEffectGroup.OffenseAuraTargeting2Effect());
 				event.getModConfigGroups().enqueue(new EnvironmentalArmor3Effect());
 			}
 		}, this);
@@ -131,6 +144,7 @@ public class BetterChambers extends StarMod {
 			@Override
 			public void onEvent(RegisterAddonsEvent event) {
 				event.addModule(new ShieldAuraAddOn(event.getContainer()));
+				event.addModule(new OffenseAuraAddOn(event.getContainer()));
 			}
 		}, this);
 

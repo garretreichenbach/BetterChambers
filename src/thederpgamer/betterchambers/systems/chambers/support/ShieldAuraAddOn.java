@@ -16,6 +16,7 @@ import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.game.server.data.ServerConfig;
 import thederpgamer.betterchambers.BetterChambers;
+import thederpgamer.betterchambers.effects.ConfigEffectGroup;
 import thederpgamer.betterchambers.effects.support.ShieldAuraEffectGroup;
 import thederpgamer.betterchambers.element.ElementManager;
 import thederpgamer.betterchambers.utils.EntityUtils;
@@ -37,6 +38,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 	private int maxTargets = 0;
 	private float maxRange = 0.0f;
 
+	private final ArrayList<ConfigEffectGroup> effectsToApply = new ArrayList<>();
 	private final ArrayList<ManagedUsableSegmentController<?>> targetingEntities = new ArrayList<>();
 
 	public ShieldAuraAddOn(ManagerContainer<?> managerContainer) {
@@ -47,11 +49,22 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 	@Override
 	public void onReactorRecalibrate(ReactorRecalibrateEvent event) {
 		try {
-			ReactorElement shieldAura = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Base").getBlockInfo());
-			usable = shieldAura != null && shieldAura.isAllValid();
-			ConfigEntityManager configManager = getManagerUsableSegmentController().getConfigManager();
-			if(configManager.getModules().containsKey(StatusEffectType.AURA_MAX_TARGETS)) maxTargets = configManager.getModules().get(StatusEffectType.AURA_MAX_TARGETS).getIntValue();
-			if(configManager.getModules().containsKey(StatusEffectType.AURA_RANGE)) maxRange = (configManager.getModules().get(StatusEffectType.AURA_RANGE).getFloatValue()) * (Integer) ServerConfig.SECTOR_SIZE.getCurrentState();
+			ReactorElement shieldAuraBase = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Base").getBlockInfo());
+			usable = shieldAuraBase != null && shieldAuraBase.isAllValid();
+			effectsToApply.clear();
+			if(isOnServer()) {
+				ConfigEntityManager configManager = getManagerUsableSegmentController().getConfigManager();
+				if(configManager.getModules().containsKey(StatusEffectType.AURA_MAX_TARGETS)) maxTargets = configManager.getModules().get(StatusEffectType.AURA_MAX_TARGETS).getIntValue();
+				if(configManager.getModules().containsKey(StatusEffectType.AURA_RANGE)) maxRange = (configManager.getModules().get(StatusEffectType.AURA_RANGE).getFloatValue()) * (Integer) ServerConfig.SECTOR_SIZE.getCurrentState();
+
+				if(usable) effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance);
+
+				ReactorElement shieldAuraCap1 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Capacity 1").getBlockInfo());
+				if(shieldAuraCap1 != null && shieldAuraCap1.isAllValid()) effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraCapacity1Effect.instance);
+
+				ReactorElement shieldAuraCap2 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Capacity 2").getBlockInfo());
+				if(shieldAuraCap2 != null && shieldAuraCap2.isAllValid()) effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraCapacity2Effect.instance);
+			}
 		} catch (Exception ignored) { }
 	}
 
@@ -144,7 +157,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 			if(!toRemove.isEmpty()) {
 				for(ManagedUsableSegmentController<?> target : toRemove) {
 					if(target.getId() != getSegmentController().getId()) {
-						target.getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, target.getNetworkObject());
+						for(ConfigEffectGroup configGroup : effectsToApply) target.getConfigManager().removeEffectAndSend(configGroup, false, target.getNetworkObject());
 					}
 				}
 			}
@@ -166,7 +179,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 						if(currentFactionId > 0 && entityFactionId > 0 && GameCommon.getGameState().getFactionManager().getRelation(currentFactionId, entityFactionId).equals(FactionRelation.RType.FRIEND)) {
 							float distance = EntityUtils.getDistance(entity, getSegmentController());
 							if(distance <= maxRange && targetCount < maxTargets && !targetingEntities.contains(entity)) {
-								entity.getConfigManager().addEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, entity.getNetworkObject());
+								for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().addEffectAndSend(configGroup, false, entity.getNetworkObject());
 								targetingEntities.add(entity);
 								targetCount ++;
 							} else if(targetCount >= maxTargets) return;
@@ -182,7 +195,7 @@ public class ShieldAuraAddOn extends SimpleAddOn {
 		if(sector != null) {
 			for(ManagedUsableSegmentController<?> entity : targetingEntities) {
 				if(entity.getId() != getSegmentController().getId()) {
-					entity.getConfigManager().removeEffectAndSend(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance, true, entity.getNetworkObject());
+					for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().removeEffectAndSend(configGroup, false, entity.getNetworkObject());
 				}
 			}
 		}
