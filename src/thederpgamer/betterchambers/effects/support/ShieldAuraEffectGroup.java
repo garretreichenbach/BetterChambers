@@ -19,15 +19,23 @@ public class ShieldAuraEffectGroup {
 
 	public static class ShieldAuraBaseEffect extends ConfigEffectGroup {
 
-		public static ShieldAuraBaseEffect instance;
-
 		public ShieldAuraBaseEffect() {
 			super("shield_aura_base_effect");
-			instance = this;
 		}
 
 		@Override
 		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Level Ratio
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = -1;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-base-effect-reactor-level-ratio", 0.2f));
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
 			{ //Set Capacity
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY);
@@ -76,15 +84,23 @@ public class ShieldAuraEffectGroup {
 
 	public static class ShieldAuraCapacity1Effect extends ConfigEffectGroup {
 
-		public static ShieldAuraCapacity1Effect instance;
-
 		public ShieldAuraCapacity1Effect() {
 			super("shield_aura_cap_1_effect");
-			instance = this;
 		}
 
 		@Override
 		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Level Ratio
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = -1;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-1-effect-reactor-level-ratio", 0.25f));
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
 			{ //Add Capacity
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY);
@@ -100,15 +116,23 @@ public class ShieldAuraEffectGroup {
 
 	public static class ShieldAuraCapacity2Effect extends ConfigEffectGroup {
 
-		public static ShieldAuraCapacity2Effect instance;
-
 		public ShieldAuraCapacity2Effect() {
 			super("shield_aura_cap_2_effect");
-			instance = this;
 		}
 
 		@Override
 		public void createElements(ArrayList<EffectConfigElement> elementList) {
+			{ //Set Level Ratio
+				EffectConfigElement configElement = new EffectConfigElement();
+				configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+				configElement.stackType = ModifierStackType.SET;
+				configElement.priority = -1;
+				StatusEffectFloatValue value = new StatusEffectFloatValue();
+				value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-2-effect-reactor-level-ratio", 0.3f));
+				configElement.value = value;
+				elementList.add(configElement);
+			}
+
 			{ //Add Capacity
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.SHIELD_CAPACITY);

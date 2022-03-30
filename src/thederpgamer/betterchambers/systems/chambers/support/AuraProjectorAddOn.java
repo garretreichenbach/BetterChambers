@@ -1,28 +1,35 @@
 package thederpgamer.betterchambers.systems.chambers.support;
 
+import api.common.GameClient;
 import api.common.GameCommon;
 import api.common.GameServer;
 import api.listener.events.systems.ReactorRecalibrateEvent;
 import api.utils.addon.SimpleAddOn;
+import api.utils.game.PlayerUtils;
 import api.utils.game.SegmentControllerUtils;
 import api.utils.sound.AudioUtils;
+import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
+import org.schema.game.common.controller.elements.effectblock.EffectElementManager;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
+import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.faction.FactionRelation;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
+import org.schema.game.server.data.GameServerState;
 import org.schema.game.server.data.ServerConfig;
 import thederpgamer.betterchambers.BetterChambers;
 import thederpgamer.betterchambers.effects.ConfigEffectGroup;
-import thederpgamer.betterchambers.effects.support.OffenseAuraEffectGroup;
-import thederpgamer.betterchambers.effects.support.ShieldAuraEffectGroup;
 import thederpgamer.betterchambers.element.ElementManager;
+import thederpgamer.betterchambers.manager.EffectConfigManager;
 import thederpgamer.betterchambers.utils.EntityUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <Description>
@@ -32,13 +39,21 @@ import java.util.ArrayList;
  */
 public class AuraProjectorAddOn extends SimpleAddOn {
 
-	public static final int UPDATE_TIMER = 300;
+	public static final int UPDATE_TIMER = 1000;
+	public static final int NONE = 0;
+	public static final int DEFENSE = 1;
+	public static final int OFFENSE = 2;
+
+	private int projectorType = NONE;
 	private final ArrayList<ConfigEffectGroup> effectsToApply = new ArrayList<>();
-	private final ArrayList<SegmentController> targetingEntities = new ArrayList<>();
+	private final ConcurrentHashMap<SegmentController, Boolean> targetingEntities = new ConcurrentHashMap<>();
 	private boolean usable = false;
 	private int ticks = 0;
+
 	private int maxTargets = 0;
 	private float maxRange = 0.0f;
+	private float levelRatio = 1.0f;
+
 
 	public AuraProjectorAddOn(ManagerContainer<?> managerContainer) {
 		super(managerContainer, ElementManager.getChamber("Aura Projector").getId(), BetterChambers.getInstance(), "AuraProjectorChamber");
@@ -55,27 +70,31 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 				ConfigEntityManager configManager = getManagerUsableSegmentController().getConfigManager();
 				if(configManager.getModules().containsKey(StatusEffectType.AURA_MAX_TARGETS)) maxTargets = configManager.getModules().get(StatusEffectType.AURA_MAX_TARGETS).getIntValue();
 				if(configManager.getModules().containsKey(StatusEffectType.AURA_RANGE)) maxRange = (configManager.getModules().get(StatusEffectType.AURA_RANGE).getFloatValue()) * (Integer) ServerConfig.SECTOR_SIZE.getCurrentState();
+				if(configManager.getModules().containsKey(StatusEffectType.AURA_REACTOR_LEVEL_RATIO)) levelRatio = configManager.getModules().get(StatusEffectType.AURA_REACTOR_LEVEL_RATIO).getFloatValue();
+				projectorType = NONE;
 
 				ReactorElement shieldAuraBase = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Base").getBlockInfo());
 				if(shieldAuraBase != null && shieldAuraBase.isAllValidOrUnspecified()) {
-					effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraBaseEffect.instance);
+					projectorType = DEFENSE;
+					effectsToApply.add(EffectConfigManager.effectMap.get("shield_aura_base_effect"));
 
 					ReactorElement shieldAuraCap1 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Capacity 1").getBlockInfo());
-					if(shieldAuraCap1 != null && shieldAuraCap1.isAllValidOrUnspecified()) effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraCapacity1Effect.instance);
+					if(shieldAuraCap1 != null && shieldAuraCap1.isAllValidOrUnspecified()) effectsToApply.add(EffectConfigManager.effectMap.get("shield_aura_cap_1_effect"));
 
 					ReactorElement shieldAuraCap2 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Shield Aura Capacity 2").getBlockInfo());
-					if(shieldAuraCap2 != null && shieldAuraCap2.isAllValidOrUnspecified()) effectsToApply.add(ShieldAuraEffectGroup.ShieldAuraCapacity2Effect.instance);
+					if(shieldAuraCap2 != null && shieldAuraCap2.isAllValidOrUnspecified()) effectsToApply.add(EffectConfigManager.effectMap.get("shield_aura_cap_2_effect"));
 				}
 
 				ReactorElement offenseAuraBase = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Offense Aura Base").getBlockInfo());
 				if(offenseAuraBase != null && offenseAuraBase.isAllValidOrUnspecified()) {
-					effectsToApply.add(OffenseAuraEffectGroup.OffenseAuraBaseEffect.instance);
+					projectorType = OFFENSE;
+					effectsToApply.add(EffectConfigManager.effectMap.get("offense_aura_base_effect"));
 
 					ReactorElement offenseAuraTargeting1 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Offense Aura Targeting 1").getBlockInfo());
-					if(offenseAuraTargeting1 != null && offenseAuraTargeting1.isAllValidOrUnspecified()) effectsToApply.add(OffenseAuraEffectGroup.OffenseAuraTargeting1Effect.instance);
+					if(offenseAuraTargeting1 != null && offenseAuraTargeting1.isAllValidOrUnspecified()) effectsToApply.add(EffectConfigManager.effectMap.get("offense_aura_targeting_1_effect"));
 
 					ReactorElement offenseAuraTargeting2 = SegmentControllerUtils.getChamberFromElement(getManagerUsableSegmentController(), ElementManager.getChamber("Offense Aura Targeting 2").getBlockInfo());
-					if(offenseAuraTargeting2 != null && offenseAuraTargeting2.isAllValidOrUnspecified()) effectsToApply.add(OffenseAuraEffectGroup.OffenseAuraTargeting2Effect.instance);
+					if(offenseAuraTargeting2 != null && offenseAuraTargeting2.isAllValidOrUnspecified()) effectsToApply.add(EffectConfigManager.effectMap.get("offense_aura_targeting_2_effect"));
 				}
 			}
 		} catch(Exception ignored) { }
@@ -88,7 +107,29 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 
 	@Override
 	public double getPowerConsumedPerSecondResting() {
-		return 0;
+		double powerConsumed = 0.0;
+		try {
+			int selfReactorLevel = getManagedSegmentController().getManagerContainer().getPowerInterface().getActiveReactor().getLevel();
+			if(isActive() && !targetingEntities.isEmpty()) {
+				for(SegmentController entity : targetingEntities.keySet()) {
+					if(entity instanceof ManagedSegmentController<?>) {
+						float powerToAdd = entity.getMass() / 2.0f;
+						int targetReactorLevel = ((ManagedSegmentController<?>) entity).getManagerContainer().getPowerInterface().getActiveReactor().getLevel();
+						if(targetReactorLevel > selfReactorLevel) {
+							float actualRatio = (float) selfReactorLevel / targetReactorLevel;
+							if(actualRatio > levelRatio) {
+								//If ratio between the reactor level of the current entity and the target entity is greater than the maximum ratio supported by the chamber setup,
+								//increase power consumption by powerToAdd + (powerToAdd * difference)
+								float difference = actualRatio - levelRatio;
+								powerToAdd += powerToAdd * difference;
+							}
+						}
+						powerConsumed += powerToAdd;
+					}
+				}
+			}
+		} catch(Exception ignored) { }
+		return powerConsumed;
 	}
 
 	@Override
@@ -104,6 +145,14 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 	@Override
 	public float getDuration() {
 		return -1;
+	}
+
+	@Override
+	public void onAttemptToExecute() {
+		if(getState() instanceof GameServerState) {
+			if(isActive()) AudioUtils.serverPlaySound("0022_spaceship user - special synthetic weapon recharged 1", 10.0f, 1.0f, getAttachedPlayers());
+			else AudioUtils.serverPlaySound("0022_spaceship user - special synthetic weapon recharged 2", 10.0f, 1.0f, getAttachedPlayers());
+		}
 	}
 
 	@Override
@@ -161,7 +210,12 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 
 	public void updateTargetList() {
 		ArrayList<SegmentController> toRemove = new ArrayList<>();
-		for(SegmentController target : targetingEntities) {
+		for(Map.Entry<SegmentController, Boolean> entry : targetingEntities.entrySet()) {
+			SegmentController target = entry.getKey();
+			if(entry.getValue()) {
+				for(ConfigEffectGroup configGroup : effectsToApply) target.getConfigManager().addEffectAndSend(configGroup, true, target.getNetworkObject());
+				entry.setValue(false);
+			}
 			float distance = EntityUtils.getDistance(target, getSegmentController());
 			if(distance > maxRange) toRemove.add(target);
 		}
@@ -184,17 +238,19 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 			for(SimpleTransformableSendableObject<?> object : sector.getEntities()) {
 				if(object instanceof SegmentController) {
 					SegmentController entity = (SegmentController) object;
-					if(entity.getId() != getManagedSegmentController().getSegmentController().getId()) {
+					if(entity.getId() != getSegmentController().getId() && !entity.equals(getSegmentController())) {
 						int currentFactionId = getSegmentController().getFactionId();
 						int entityFactionId = entity.getFactionId();
 						if(currentFactionId > 0 && entityFactionId > 0 && GameCommon.getGameState().getFactionManager().getRelation(currentFactionId, entityFactionId).equals(FactionRelation.RType.FRIEND)) {
 							float distance = EntityUtils.getDistance(entity, getSegmentController());
 							if(distance <= maxRange && targetCount < maxTargets && !targetingEntities.contains(entity)) {
 								for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().addEffectAndSend(configGroup, true, entity.getNetworkObject());
-								targetingEntities.add(entity);
+								targetingEntities.put(entity, false);
 								targetCount++;
 							} else if(targetCount >= maxTargets) return;
 						}
+					} else {
+						for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().removeEffectAndSend(configGroup, true, entity.getNetworkObject());
 					}
 				}
 			}
@@ -202,10 +258,64 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 	}
 
 	public void removeEntityEffects() {
-		for(SegmentController entity : targetingEntities) {
+		for(SegmentController entity : targetingEntities.keySet()) {
 			if(entity.getId() != getSegmentController().getId()) {
 				for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().removeEffectAndSend(configGroup, true, entity.getNetworkObject());
 			}
+		}
+	}
+
+	public void disrupt(float hits, float disruptAmount) {
+		if(isActive() && !targetingEntities.isEmpty()) {
+			ticks = (int) (-1000 * disruptAmount);
+			if(getState() instanceof GameServerState) AudioUtils.serverPlaySound("0022_spaceship user - special synthetic weapon recharged 1", 10.0f, 1.0f, getAttachedPlayers());
+			else {
+				if(PlayerUtils.getCurrentControl(GameClient.getClientPlayerState()).equals(getSegmentController())) {
+					((GameClientState) getState()).getWorldDrawer().getGuiDrawer().notifyEffectHit(getSegmentController(), EffectElementManager.OffensiveEffects.STOP);
+				}
+			}
+			for(Map.Entry<SegmentController, Boolean> entry : targetingEntities.entrySet()) {
+				SegmentController entity = entry.getKey();
+				if(!entry.getValue()) { //Todo: Figure out how to change config effect values per entity?
+					for(ConfigEffectGroup configGroup : effectsToApply) entity.getConfigManager().removeEffectAndSend(configGroup, true, entity.getNetworkObject());
+					entry.setValue(true);
+				}
+			}
+			/*
+			for(Map.Entry<SegmentController, Boolean> entry : targetingEntities.entrySet()) {
+				SegmentController entity = entry.getKey();
+				if(!entry.getValue()) {
+					for(EffectModule effectModule : entity.getConfigManager().getModulesList()) {
+						if(projectorType == DEFENSE) {
+							switch(effectModule.getType()) {
+								case SHIELD_CAPACITY:
+									effectModule.setFloatValue(effectModule.getFloatValue() * disruptAmount);
+									break;
+								case SHIELD_CAPACITY_UPKEEP:
+									effectModule.setFloatValue(effectModule.getFloatValue() + (effectModule.getFloatValue() * disruptAmount));
+									break;
+							}
+						}
+						entry.setValue(true);
+					}
+				}
+
+			 */
+
+				/*
+				for(ConfigGroup configGroup : entity.getConfigManager().getConfigPool().pool) {
+					if(configGroup.id.contains("aura") && entity.getConfigManager().isActive(configGroup)) {
+						for(EffectConfigElement element : configGroup.elements) {
+							if(element.stackType.equals(ModifierStackType.ADD)) {
+								if(element.value instanceof StatusEffectFloatValue) {
+									StatusEffectFloatValue value = (StatusEffectFloatValue) element.value;
+									value.value.set(value.getValue() * disruptAmount);
+								}
+							}
+						}
+					}
+				}
+				 */
 		}
 	}
 }

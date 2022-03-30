@@ -19,10 +19,15 @@ public class ConfigManager {
 
 	private static FileConfiguration systemConfig;
 	private static final String[] defaultSystemConfig = {
+			"aura-disruptor-beam-power-per-unit: 1.0f",
+			"aura-disruptor-beam-power-consumption-per-unit: 12.0",
 			"ai-base-enhancement-chamber-weapon-range-add: 0.15",
 			"ai-base-enhancement-chamber-turret-accuracy-add: 0.2",
 			"ai-base-enhancement-chamber-pd-accuracy-add: 0.2",
 			"ai-base-enhancement-chamber-drone-accuracy-add: 0.2",
+			"aura-chamber-base-effect-reactor-level-ratio: 0.2",
+			"aura-chamber-1-effect-reactor-level-ratio: 0.25",
+			"aura-chamber-2-effect-reactor-level-ratio: 0.3",
 			"aura-base-chamber-range-set: 0.5",
 			"aura-base-chamber-max-targets-set: 1",
 			"aura-range-chamber-1-range-add: 0.5",

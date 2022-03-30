@@ -19,15 +19,23 @@ public class OffenseAuraEffectGroup {
 
     public static class OffenseAuraBaseEffect extends ConfigEffectGroup {
 
-        public static OffenseAuraBaseEffect instance;
-
         public OffenseAuraBaseEffect() {
             super("offense_aura_base_effect");
-            instance = this;
         }
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
+            { //Set Level Ratio
+                EffectConfigElement configElement = new EffectConfigElement();
+                configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+                configElement.stackType = ModifierStackType.SET;
+                configElement.priority = -1;
+                StatusEffectFloatValue value = new StatusEffectFloatValue();
+                value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-base-effect-reactor-level-ratio", 0.2f));
+                configElement.value = value;
+                elementList.add(configElement);
+            }
+
             { //Set Base Turret Accuracy
                 EffectConfigElement configElement = new EffectConfigElement();
                 configElement.init(StatusEffectType.AI_ACCURACY_TURRET);
@@ -98,31 +106,45 @@ public class OffenseAuraEffectGroup {
 
     public static class OffenseAuraTargeting1Effect extends ConfigEffectGroup {
 
-        public static OffenseAuraTargeting1Effect instance;
-
         public OffenseAuraTargeting1Effect() {
             super("offense_aura_targeting_1_effect");
-            instance = this;
         }
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
-
+            { //Set Level Ratio
+                EffectConfigElement configElement = new EffectConfigElement();
+                configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+                configElement.stackType = ModifierStackType.SET;
+                configElement.priority = -1;
+                StatusEffectFloatValue value = new StatusEffectFloatValue();
+                value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-1-effect-reactor-level-ratio", 0.25f));
+                configElement.value = value;
+                elementList.add(configElement);
+            }
+            //Todo
         }
     }
 
     public static class OffenseAuraTargeting2Effect extends ConfigEffectGroup {
 
-        public static OffenseAuraTargeting2Effect instance;
-
         public OffenseAuraTargeting2Effect() {
             super("offense_aura_targeting_2_effect");
-            instance = this;
         }
 
         @Override
         public void createElements(ArrayList<EffectConfigElement> elementList) {
-
+            { //Set Level Ratio
+                EffectConfigElement configElement = new EffectConfigElement();
+                configElement.init(StatusEffectType.AURA_REACTOR_LEVEL_RATIO);
+                configElement.stackType = ModifierStackType.SET;
+                configElement.priority = -1;
+                StatusEffectFloatValue value = new StatusEffectFloatValue();
+                value.value.set(ConfigManager.getSystemConfig().getConfigurableFloat("aura-chamber-2-effect-reactor-level-ratio", 0.3f));
+                configElement.value = value;
+                elementList.add(configElement);
+            }
+            //Todo
         }
     }
 }

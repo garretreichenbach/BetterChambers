@@ -769,18 +769,12 @@ public enum StatusEffectType {
             return "Aura Max Targets";
         }
     }, false, StatusEffectIntValue.class),
-    AURA_SHIELD_CAP(StatusEffectCategory.AURA, new Object() {
+    AURA_REACTOR_LEVEL_RATIO(StatusEffectCategory.AURA, new Object() {
         @Override
         public final String toString() {
-            return "Shield Capacity Boost Aura";
+            return "Aura Effect Reactor Level Ratio";
         }
-    }, true, StatusEffectFloatValue.class),
-    AURA_SHIELD_UPKEEP_REDUCTION(StatusEffectCategory.AURA, new Object() {
-        @Override
-        public final String toString() {
-            return "Shield Upkeep Reduction Aura";
-        }
-    }, true, StatusEffectFloatValue.class)
+    }, false, StatusEffectFloatValue.class)
     //
     ;
     ///

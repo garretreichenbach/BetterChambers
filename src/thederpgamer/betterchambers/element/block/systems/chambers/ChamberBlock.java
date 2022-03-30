@@ -49,9 +49,5 @@ public abstract class ChamberBlock {
 		}
 	}
 
-	public void postInit() {
-
-	}
-
 	public abstract void initialize();
 }

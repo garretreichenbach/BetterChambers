@@ -20,7 +20,14 @@ public class ResourceManager {
 			"offense-chamber-icon",
 			"support-chamber",
 			"support-chamber-active",
-			"support-chamber-icon"
+			"support-chamber-icon",
+			"aura-disruptor-computer-front",
+			"aura-disruptor-computer-side",
+			//"aura-disruptor-computer-icon",
+			"aura-disruptor-module-front",
+			"aura-disruptor-module-side",
+			"aura-disruptor-module-top"
+			//"aura-disruptor-module-icon"
 	};
 
 	private static final String[] spriteNames = {
