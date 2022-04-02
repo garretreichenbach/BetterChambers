@@ -1,6 +1,5 @@
 package thederpgamer.betterchambers.element.block.systems.chambers.support;
 
-import api.config.BlockConfig;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.schine.graphicsengine.core.GraphicsContext;
 import thederpgamer.betterchambers.element.ElementManager;
@@ -24,7 +23,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -38,7 +36,6 @@ public class AuraChamber {
 			setUpgrade(ElementManager.getChamber("Aura Range Boost 2"));
 			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -51,7 +48,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -64,7 +60,6 @@ public class AuraChamber {
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			setUpgrade(ElementManager.getChamber("Aura Range Boost 3"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -77,7 +72,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -89,7 +83,6 @@ public class AuraChamber {
 			blockInfo.chamberConfigGroupsLowerCase.add("aura_range_boost_effect_3");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -102,7 +95,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -116,7 +108,6 @@ public class AuraChamber {
 			addChildren(ElementManager.getChamber("Shield Aura Base"), ElementManager.getChamber("Offense Aura Base"));
 			ElementManager.getBlock("Reactor Support Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -129,7 +120,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -143,7 +133,6 @@ public class AuraChamber {
 			addExclusives(ElementManager.getChamber("Offense Aura Base"));
 			addChildren(ElementManager.getChamber("Shield Aura Capacity 1"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -156,7 +145,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -169,7 +157,6 @@ public class AuraChamber {
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			setUpgrade(ElementManager.getChamber("Shield Aura Capacity 2"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -182,7 +169,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -194,7 +180,6 @@ public class AuraChamber {
 			blockInfo.chamberConfigGroupsLowerCase.add("shield_aura_cap_2_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -207,7 +192,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -221,7 +205,6 @@ public class AuraChamber {
 			addExclusives(ElementManager.getChamber("Shield Aura Base"));
 			addChildren(ElementManager.getChamber("Offense Aura Targeting 1"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -234,7 +217,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -247,7 +229,6 @@ public class AuraChamber {
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			setUpgrade(ElementManager.getChamber("Offense Aura Targeting 2"));
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 
@@ -260,7 +241,6 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -272,7 +252,6 @@ public class AuraChamber {
 			blockInfo.chamberConfigGroupsLowerCase.add("offense_aura_targeting_2_effect");
 			blockInfo.chamberRoot = ElementManager.getBlock("Reactor Support Chamber").getId();
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 }

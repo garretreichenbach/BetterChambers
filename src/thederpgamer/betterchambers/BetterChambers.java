@@ -3,6 +3,7 @@ package thederpgamer.betterchambers;
 import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
+import api.listener.events.draw.RegisterWorldDrawersEvent;
 import api.listener.events.input.KeyPressEvent;
 import api.listener.events.register.ManagerContainerRegisterEvent;
 import api.listener.events.register.RegisterAddonsEvent;
@@ -33,6 +34,7 @@ import thederpgamer.betterchambers.manager.ResourceManager;
 import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
 import thederpgamer.betterchambers.systems.chambers.support.AuraProjectorAddOn;
 import thederpgamer.betterchambers.systems.weapons.auradisruptor.AuraDisruptorBeamElementManager;
+import thederpgamer.betterchambers.utils.BlockIconUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -65,7 +67,8 @@ public class BetterChambers extends StarMod {
 	private final String[] overwriteClasses = {
 			"EffectAddOn",
 			"StatusEffectCategory",
-			"StatusEffectType"
+			"StatusEffectType",
+			"SingleBlockDrawer"
 	};
 	public static long lastInputMs = 0;
 	public static int lastInput = -1;
@@ -74,6 +77,7 @@ public class BetterChambers extends StarMod {
 			KeyboardMappings.UP_SHIP, KeyboardMappings.DOWN_SHIP,
 			KeyboardMappings.STRAFE_LEFT_SHIP, KeyboardMappings.STRAFE_RIGHT_SHIP
 	};
+	public static BlockIconUtils iconUtils;
 
 	@Override
 	public void onEnable() {
@@ -122,6 +126,15 @@ public class BetterChambers extends StarMod {
 	}
 
 	private void registerListeners() {
+		StarLoader.registerListener(RegisterWorldDrawersEvent.class, new Listener<RegisterWorldDrawersEvent>() {
+			@Override
+			public void onEvent(RegisterWorldDrawersEvent event) {
+				if(iconUtils == null) {
+					event.getModDrawables().add(iconUtils = new BlockIconUtils());
+				}
+			}
+		}, this);
+
 		StarLoader.registerListener(ManagerContainerRegisterEvent.class, new Listener<ManagerContainerRegisterEvent>() {
 			@Override
 			public void onEvent(ManagerContainerRegisterEvent event) {

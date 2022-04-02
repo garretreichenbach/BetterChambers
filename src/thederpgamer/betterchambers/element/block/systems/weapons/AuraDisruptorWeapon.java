@@ -17,13 +17,12 @@ import java.util.ArrayList;
 public class AuraDisruptorWeapon extends WeaponBlock {
 
 	public AuraDisruptorWeapon() {
-		super("Aura Disruptor Computer", "Aura Disruptor Module", ElementKeyMap.getInfo(4).getType());
+		super("Aura Disruptor Computer", "Aura Disruptor Module");
 	}
 
 	@Override
 	public void initializeComputer() {
 		if(GraphicsContext.initialized) {
-			//computerInfo.setBuildIconNum(ResourceManager.getTexture("aura-disruptor-computer-icon").getTextureId());
 			short frontTexture = (short) ResourceManager.getTexture("aura-disruptor-computer-front").getTextureId();
 			short backTexture = ElementKeyMap.getInfo(4).getTextureId(0);
 			short sideTexture = (short) ResourceManager.getTexture("aura-disruptor-computer-side").getTextureId();
@@ -41,13 +40,12 @@ public class AuraDisruptorWeapon extends WeaponBlock {
 		computerInfo.volume = ElementKeyMap.getInfo(4).volume;
 
 		BlockConfig.addRecipe(computerInfo, ElementKeyMap.getInfo(4).getProducedInFactoryType(), (int) ElementKeyMap.getInfo(4).getFactoryBakeTime(), (new ArrayList<>(ElementKeyMap.getInfo(4).getConsistence()).toArray(new FactoryResource[1])));
-		BlockConfig.add(computerInfo);
+		BlockConfig.setElementCategory(computerInfo, ElementKeyMap.getInfo(4).getType());
 	}
 
 	@Override
 	public void initializeModule() {
 		if(GraphicsContext.initialized) {
-			//moduleInfo.setBuildIconNum(ResourceManager.getTexture("aura-disruptor-module-icon").getTextureId());
 			short frontTexture = (short) ResourceManager.getTexture("aura-disruptor-module-front").getTextureId();
 			short sideTexture = (short) ResourceManager.getTexture("aura-disruptor-module-side").getTextureId();
 			short topTexture = (short) ResourceManager.getTexture("aura-disruptor-module-top").getTextureId();
@@ -63,6 +61,6 @@ public class AuraDisruptorWeapon extends WeaponBlock {
 		moduleInfo.volume = ElementKeyMap.getInfo(24).volume;
 
 		BlockConfig.addRecipe(moduleInfo, ElementKeyMap.getInfo(24).getProducedInFactoryType(), (int) ElementKeyMap.getInfo(24).getFactoryBakeTime(), (new ArrayList<>(ElementKeyMap.getInfo(24).getConsistence()).toArray(new FactoryResource[1])));
-		BlockConfig.add(moduleInfo);
+		BlockConfig.setElementCategory(moduleInfo, ElementKeyMap.getInfo(4).getType());
 	}
 }

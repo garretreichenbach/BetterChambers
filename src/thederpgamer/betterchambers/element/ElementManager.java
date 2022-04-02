@@ -18,18 +18,28 @@ import java.util.ArrayList;
  */
 public class ElementManager {
 
-	public enum FactoryType {NONE, CAPSULE_REFINERY, MICRO_ASSEMBLER, BASIC_FACTORY, STANDARD_FACTORY, ADVANCED_FACTORY}
-
 	private static final ArrayList<Block> blockList = new ArrayList<>();
 	private static final ArrayList<ChamberBlock> chamberList = new ArrayList<>();
 	private static final ArrayList<WeaponBlock> weaponList = new ArrayList<>();
 
 	public static void initialize() {
-		for(Block blockElement : blockList) blockElement.initialize();
-		for(ChamberBlock chamberElement : chamberList) chamberElement.initialize();
-		for(WeaponBlock weaponElement : weaponList) {
+		for(final Block blockElement : blockList) {
+			blockElement.initialize();
+			BlockConfig.add(blockElement.getBlockInfo());
+		}
+
+		for(final ChamberBlock chamberElement : chamberList) {
+			chamberElement.initialize();
+			BlockConfig.add(chamberElement.getBlockInfo());
+		}
+
+		for(final WeaponBlock weaponElement : weaponList) {
 			weaponElement.initializeComputer();
 			weaponElement.initializeModule();
+
+			BlockConfig.add(weaponElement.getComputerInfo());
+			BlockConfig.add(weaponElement.getModuleInfo());
+
 			BlockConfig.registerComputerModulePair(weaponElement.getComputerId(), weaponElement.getModuleId());
 		}
 	}
@@ -116,4 +126,6 @@ public class ElementManager {
 		}
 		return category;
 	}
+
+	public enum FactoryType {NONE, CAPSULE_REFINERY, MICRO_ASSEMBLER, BASIC_FACTORY, STANDARD_FACTORY, ADVANCED_FACTORY}
 }

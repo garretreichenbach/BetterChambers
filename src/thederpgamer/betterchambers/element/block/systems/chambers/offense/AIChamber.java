@@ -1,6 +1,5 @@
 package thederpgamer.betterchambers.element.block.systems.chambers.offense;
 
-import api.config.BlockConfig;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.schine.graphicsengine.core.GraphicsContext;
 import thederpgamer.betterchambers.element.ElementManager;
@@ -24,7 +23,6 @@ public class AIChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				blockInfo.setBuildIconNum(ResourceManager.getTexture("offense-chamber-icon").getTextureId());
 				short textureId = (short) ResourceManager.getTexture("offense-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
@@ -37,7 +35,6 @@ public class AIChamber {
 			blockInfo.chamberConfigGroupsLowerCase.add("ai_base_enhancement_effect");
 			ElementManager.getBlock("Reactor Offense Chamber").getBlockInfo().chamberChildren.add(getId());
 			ElementKeyMap.getInfo(991).chamberChildren.remove(getId());
-			BlockConfig.add(blockInfo);
 		}
 	}
 }

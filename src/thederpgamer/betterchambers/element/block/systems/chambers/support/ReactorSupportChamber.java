@@ -18,13 +18,12 @@ import java.util.ArrayList;
 public class ReactorSupportChamber extends Block {
 
 	public ReactorSupportChamber() {
-		super("Reactor Support Chamber", ElementKeyMap.getInfo(991).getType());
+		super("Reactor Support Chamber");
 	}
 
 	@Override
 	public void initialize() {
 		if(GraphicsContext.initialized) {
-			blockInfo.setBuildIconNum(ResourceManager.getTexture("support-chamber-icon").getTextureId());
 			short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
 			blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 		}
@@ -43,6 +42,6 @@ public class ReactorSupportChamber extends Block {
 		blockInfo.reactorGeneralIconIndex = 11;
 
 		BlockConfig.addRecipe(blockInfo, ElementKeyMap.getInfo(991).getProducedInFactoryType(), (int) ElementKeyMap.getInfo(991).getFactoryBakeTime(), (new ArrayList<>(ElementKeyMap.getInfo(991).getConsistence()).toArray(new FactoryResource[1])));
-		BlockConfig.add(blockInfo);
+		BlockConfig.setElementCategory(blockInfo, ElementKeyMap.getInfo(991).getType());
 	}
 }

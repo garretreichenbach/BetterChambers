@@ -17,17 +17,13 @@ public class ResourceManager {
 	private static final String[] textureNames = {
 			"offense-chamber",
 			"offense-chamber-active",
-			"offense-chamber-icon",
 			"support-chamber",
 			"support-chamber-active",
-			"support-chamber-icon",
 			"aura-disruptor-computer-front",
 			"aura-disruptor-computer-side",
-			//"aura-disruptor-computer-icon",
 			"aura-disruptor-module-front",
 			"aura-disruptor-module-side",
 			"aura-disruptor-module-top"
-			//"aura-disruptor-module-icon"
 	};
 
 	private static final String[] spriteNames = {

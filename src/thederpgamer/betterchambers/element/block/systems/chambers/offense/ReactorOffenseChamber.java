@@ -18,13 +18,12 @@ import java.util.ArrayList;
 public class ReactorOffenseChamber extends Block {
 
 	public ReactorOffenseChamber() {
-		super("Reactor Offense Chamber", ElementKeyMap.getInfo(991).getType());
+		super("Reactor Offense Chamber");
 	}
 
 	@Override
 	public void initialize() {
 		if(GraphicsContext.initialized) {
-			blockInfo.setBuildIconNum(ResourceManager.getTexture("offense-chamber-icon").getTextureId());
 			short textureId = (short) ResourceManager.getTexture("offense-chamber").getTextureId();
 			blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 		}
@@ -43,6 +42,6 @@ public class ReactorOffenseChamber extends Block {
 		blockInfo.reactorGeneralIconIndex = 10;
 
 		BlockConfig.addRecipe(blockInfo, ElementKeyMap.getInfo(991).getProducedInFactoryType(), (int) ElementKeyMap.getInfo(991).getFactoryBakeTime(), (new ArrayList<>(ElementKeyMap.getInfo(991).getConsistence()).toArray(new FactoryResource[1])));
-		BlockConfig.add(blockInfo);
+		BlockConfig.setElementCategory(blockInfo, ElementKeyMap.getInfo(991).getType());
 	}
 }

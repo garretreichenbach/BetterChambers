@@ -1,6 +1,5 @@
 package thederpgamer.betterchambers.element.block.systems.chambers.defense;
 
-import api.config.BlockConfig;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.schine.graphicsengine.core.GraphicsContext;
 import thederpgamer.betterchambers.element.block.systems.chambers.ChamberBlock;
@@ -19,10 +18,7 @@ public class EnvironmentalArmorChamber3 extends ChamberBlock {
 
 	@Override
 	public void initialize() {
-		if(GraphicsContext.initialized) {
-			blockInfo.setBuildIconNum(ElementKeyMap.getInfo(33).getBuildIconNum());
-			blockInfo.setTextureId(new short[] {644, 644, 644, 644, 644, 644});
-		}
+		if(GraphicsContext.initialized) blockInfo.setTextureId(new short[] {644, 644, 644, 644, 644, 644});
 		blockInfo.setDescription("Grants your armor blocks complete immunity from any environmental based damage.");
 		blockInfo.setPlacable(false);
 		blockInfo.setInRecipe(false);
@@ -32,6 +28,5 @@ public class EnvironmentalArmorChamber3 extends ChamberBlock {
 		blockInfo.chamberConfigGroupsLowerCase.add("environmental_armor_3_effect");
 		ElementKeyMap.getInfo(33).chamberChildren.add(getId());
 		ElementKeyMap.getInfo(33).chamberUpgradesTo = getId();
-		BlockConfig.add(blockInfo);
 	}
 }

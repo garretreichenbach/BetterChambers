@@ -1,0 +1,162 @@
+package thederpgamer.betterchambers.utils;
+
+import api.utils.draw.ModWorldDrawer;
+import api.utils.textures.StarLoaderTexture;
+import com.bulletphysics.linearmath.Transform;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.util.vector.Matrix4f;
+import org.schema.game.client.view.cubes.shapes.BlockStyle;
+import org.schema.game.client.view.gui.GUI3DBlockElement;
+import org.schema.game.client.view.tools.SingleBlockDrawer;
+import org.schema.game.common.data.element.ElementInformation;
+import org.schema.schine.graphicsengine.core.*;
+import org.schema.schine.graphicsengine.core.settings.EngineSettings;
+import org.schema.schine.graphicsengine.forms.gui.GUIElement;
+import thederpgamer.betterchambers.element.ElementManager;
+import thederpgamer.betterchambers.element.block.Block;
+import thederpgamer.betterchambers.element.block.systems.chambers.ChamberBlock;
+import thederpgamer.betterchambers.element.block.systems.weapons.WeaponBlock;
+import thederpgamer.betterchambers.manager.ConfigManager;
+
+import javax.imageio.ImageIO;
+import javax.vecmath.Matrix3f;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+
+/**
+ * <Description>
+ *
+ * @author TheDerpGamer
+ * @version 1.0 - [03/30/2022]
+ */
+public class BlockIconUtils extends ModWorldDrawer {
+
+	private Transform orientation = new Transform();
+	private Transform orientationTmp = new Transform();
+	private Matrix3f rot = new Matrix3f();
+	private Transform mView = new Transform();
+	private FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+	private float[] ff = new float[16];
+
+	private boolean initialized = false;
+
+	public BlockIconUtils() {
+		orientation.setIdentity();
+		orientationTmp.setIdentity();
+	}
+
+	@Override
+	public void update(Timer timer) {
+
+	}
+
+	@Override
+	public void cleanUp() {
+
+	}
+
+	@Override
+	public boolean isInvisible() {
+		return false;
+	}
+
+	@Override
+	public void onInit() {
+		if(initialized) return;
+		initialized = true;
+		ArrayList<ElementInformation> types = new ArrayList<>();
+		for(Block block : ElementManager.getBlockList()) types.add(block.getBlockInfo());
+		for(ChamberBlock block : ElementManager.getChamberList()) types.add(block.getBlockInfo());
+		for(WeaponBlock block : ElementManager.getWeaponList()) {
+			types.add(block.getComputerInfo());
+			types.add(block.getModuleInfo());
+		}
+
+		FrameBufferObjects fbo = new FrameBufferObjects("ModIconBakery", 1024, 1024);
+		try {
+			fbo.initialize();
+		} catch(GLException exception) {
+			exception.printStackTrace();
+		}
+		fbo.enable();
+		GL11.glClearColor(0, 0, 0, 0);
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glViewport(0, 0, 1024, 1024);
+
+		GlUtil.glEnable(GL11.GL_LIGHTING);
+		GlUtil.glDisable(GL11.GL_DEPTH_TEST);
+		GlUtil.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+		int x = 0;
+		int y = 0;
+		for(ElementInformation e : types) {
+			GUI3DBlockElement.setMatrix();
+			Matrix4f modelviewMatrix = Controller.modelviewMatrix;
+			fb.rewind();
+			modelviewMatrix.store(fb);
+			fb.rewind();
+			fb.get(ff);
+			mView.setFromOpenGLMatrix(ff);
+			mView.origin.set(0, 0, 0);
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			GUIElement.enableOrthogonal3d(1024, 1024);
+			GlUtil.glPushMatrix();
+			GlUtil.translateModelview(32 + (x * 64), 32 + (y * 64), 0f);
+			GlUtil.scaleModelview(32f, -32f, 32f);
+			if(e.getBlockStyle() == BlockStyle.SPRITE) {
+				orientationTmp.basis.set(mView.basis);
+				mView.basis.setIdentity();
+			} else {
+				rot.set(orientation.basis);
+				mView.basis.mul(rot);
+			}
+
+			GlUtil.glMultMatrix(mView);
+			if(e.getBlockStyle() == BlockStyle.SPRITE) mView.basis.set(orientationTmp.basis);
+			GlUtil.glDisable(GL11.GL_DEPTH_TEST);
+			SingleBlockDrawer drawer = new SingleBlockDrawer();
+			drawer.setLightAll(true);
+			GlUtil.glPushMatrix();
+			if(e.getBlockStyle() != BlockStyle.NORMAL) GlUtil.rotateModelview((Float) EngineSettings.ICON_BAKERY_BLOCKSTYLE_ROTATE_DEG.getCurrentState(), 0, 1, 0);
+			GlUtil.rotateModelview(45.0f / 2.0f, 1, 0, 0);
+			GlUtil.rotateModelview(45, 0, -1, 0);
+			if(e.isController()) GlUtil.rotateModelview(180, 0, 1, 0);
+			drawer.drawIcon(e, x, y);
+			GlUtil.glPopMatrix();
+			GUIElement.disableOrthogonal();
+			if(x >= 16) {
+				x = 0;
+				y ++;
+			} else x ++;
+		}
+
+		AbstractScene.mainLight.draw();
+		GlUtil.glDisable(GL11.GL_NORMALIZE);
+		GlUtil.glEnable(GL11.GL_DEPTH_TEST);
+
+		File file = null;
+		try {
+			file = new File(DataUtils.getWorldDataPath() + "/block-icons.png");
+			file.createNewFile();
+			GlUtil.writeScreenToDisk(DataUtils.getWorldDataPath() + "/block-icons", "png", 1024, 1024, 4, fbo);
+			BufferedImage image = ImageIO.read(file);
+			StarLoaderTexture texture = StarLoaderTexture.newIconTexture(image);
+			int textureId = texture.getTextureId();
+			for(ElementInformation e : types) {
+				e.setBuildIconNum(textureId);
+				textureId ++;
+			}
+		} catch(Exception exception) {
+			exception.printStackTrace();
+		}
+
+		GL11.glViewport(0, 0, GLFrame.getWidth(), GLFrame.getHeight());
+		fbo.disable();
+		fbo.cleanUp();
+		if(!ConfigManager.getMainConfig().getBoolean("debug-mode")) file.deleteOnExit();
+	}
+}
