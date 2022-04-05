@@ -19,8 +19,29 @@ public class ConfigManager {
 
 	private static FileConfiguration systemConfig;
 	private static final String[] defaultSystemConfig = {
-			"ai-base-enhancement-chamber-turret-accuracy-multiplier: 0.2",
-			"ai-base-enhancement-chamber-pd-accuracy-multiplier: 0.3"
+			"aura-disruptor-beam-power-per-unit: 1.0f",
+			"aura-disruptor-beam-power-consumption-per-unit: 12.0",
+			"ai-base-enhancement-chamber-weapon-range-add: 0.15",
+			"ai-base-enhancement-chamber-turret-accuracy-add: 0.2",
+			"ai-base-enhancement-chamber-pd-accuracy-add: 0.2",
+			"ai-base-enhancement-chamber-drone-accuracy-add: 0.2",
+			"aura-chamber-base-effect-reactor-level-ratio: 0.2",
+			"aura-chamber-1-effect-reactor-level-ratio: 0.25",
+			"aura-chamber-2-effect-reactor-level-ratio: 0.3",
+			"aura-base-chamber-range-set: 0.5",
+			"aura-base-chamber-max-targets-set: 1",
+			"aura-range-chamber-1-range-add: 0.5",
+			"aura-range-chamber-2-range-add: 0.5",
+			"aura-range-chamber-3-range-add: 0.5",
+			"shield-boost-aura-chamber-capacity-add: 0.15",
+			"shield-boost-aura-chamber-upkeep-reduction-add: 0.15",
+			"shield-capacity-1-aura-chamber-add: 0.1",
+			"shield-capacity-2-aura-chamber-add: 0.2",
+			"offense-aura-chamber-turret-accuracy-add: 0.15",
+			"offense-aura-chamber-pd-accuracy-add: 0.15",
+			"offense-aura-chamber-drone-accuracy-add: 0.15",
+			"targeting-1-aura-chamber-weapon-range-add: 0.1",
+			"targeting-2-aura-chamber-weapon-range-add: 0.2"
 	};
 
 	public static void initialize(BetterChambers instance) {

@@ -18,6 +18,7 @@ public abstract class ChamberBlock {
 	public ChamberBlock(String name, short generalId, float chamberCapacity, StatusEffectType... statusEffects) {
 		blockInfo = BlockConfig.newChamber(BetterChambers.getInstance(), name, generalId, statusEffects);
 		blockInfo.chamberCapacity = chamberCapacity;
+		//blockInfo.setBlockStyle(BlockStyle.NORMAL.id);
 	}
 
 	public ElementInformation getBlockInfo() {

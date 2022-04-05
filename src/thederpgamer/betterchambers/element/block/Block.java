@@ -1,7 +1,6 @@
 package thederpgamer.betterchambers.element.block;
 
 import api.config.BlockConfig;
-import org.schema.game.common.data.element.ElementCategory;
 import org.schema.game.common.data.element.ElementInformation;
 import thederpgamer.betterchambers.BetterChambers;
 
@@ -15,9 +14,9 @@ public abstract class Block {
 
 	protected ElementInformation blockInfo;
 
-	public Block(String name, ElementCategory category) {
+	public Block(String name) {
 		blockInfo = BlockConfig.newElement(BetterChambers.getInstance(), name, new short[6]);
-		BlockConfig.setElementCategory(blockInfo, category);
+		//blockInfo.setBlockStyle(BlockStyle.NORMAL.id);
 	}
 
 	public final ElementInformation getBlockInfo() {

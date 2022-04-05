@@ -1,4 +1,4 @@
-package thederpgamer.betterchambers.element.block.systems.chambers.offense;
+package thederpgamer.betterchambers.element.block.systems.chambers.support;
 
 import api.config.BlockConfig;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -13,22 +13,22 @@ import java.util.ArrayList;
  * <Description>
  *
  * @author TheDerpGamer
- * @version 1.0 - [03/25/2022]
+ * @version 1.0 - [03/26/2022]
  */
-public class ReactorOffenseChamber extends Block {
+public class ReactorSupportChamber extends Block {
 
-	public ReactorOffenseChamber() {
-		super("Reactor Offense Chamber");
+	public ReactorSupportChamber() {
+		super("Reactor Support Chamber");
 	}
 
 	@Override
 	public void initialize() {
 		if(GraphicsContext.initialized) {
-			blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-offense-chamber-icon").getTextureId());
-			short textureId = (short) ResourceManager.getTexture("reactor-offense-chamber").getTextureId();
+			blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+			short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 			blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 		}
-		blockInfo.setDescription("Reactor Chamber to enhance offensive capabilities.\nNeeds to be physically connected with a Power Reactor by using Reactor Conduit blocks.");
+		blockInfo.setDescription("Reactor Chamber to enhance support capabilities.\nNeeds to be physically connected with a Power Reactor by using Reactor Conduit blocks.");
 		blockInfo.setPlacable(true);
 		blockInfo.canActivate = true;
 		blockInfo.setInRecipe(true);
@@ -40,7 +40,7 @@ public class ReactorOffenseChamber extends Block {
 		blockInfo.chamberPermission = 1;
 		blockInfo.blockResourceType = 2;
 		blockInfo.chamberGeneral = true;
-		blockInfo.reactorGeneralIconIndex = 10;
+		blockInfo.reactorGeneralIconIndex = 11;
 
 		BlockConfig.addRecipe(blockInfo, ElementKeyMap.getInfo(991).getProducedInFactoryType(), (int) ElementKeyMap.getInfo(991).getFactoryBakeTime(), (new ArrayList<>(ElementKeyMap.getInfo(991).getConsistence()).toArray(new FactoryResource[1])));
 		BlockConfig.setElementCategory(blockInfo, ElementKeyMap.getInfo(991).getType());

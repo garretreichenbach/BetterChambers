@@ -3,13 +3,12 @@ package thederpgamer.betterchambers.element;
 import api.config.BlockConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.schema.game.common.data.element.ElementCategory;
-import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import thederpgamer.betterchambers.element.block.Block;
 import thederpgamer.betterchambers.element.block.systems.chambers.ChamberBlock;
+import thederpgamer.betterchambers.element.block.systems.weapons.WeaponBlock;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * <Description>
@@ -19,18 +18,33 @@ import java.util.HashMap;
  */
 public class ElementManager {
 
-	public enum FactoryType {NONE, CAPSULE_REFINERY, MICRO_ASSEMBLER, BASIC_FACTORY, STANDARD_FACTORY, ADVANCED_FACTORY}
-
-	private static ArrayList<Block> blockList = new ArrayList<>();
-	private static ArrayList<ChamberBlock> chamberList = new ArrayList<>();
-	public static HashMap<String, Integer> factories = new HashMap<>();
+	private static final ArrayList<Block> blockList = new ArrayList<>();
+	private static final ArrayList<ChamberBlock> chamberList = new ArrayList<>();
+	private static final ArrayList<WeaponBlock> weaponList = new ArrayList<>();
 
 	public static void initialize() {
-		for(Block blockElement : blockList) blockElement.initialize();
-		for(ChamberBlock chamber : chamberList) chamber.initialize();
+		for(final Block blockElement : blockList) {
+			blockElement.initialize();
+			BlockConfig.add(blockElement.getBlockInfo());
+		}
+
+		for(final ChamberBlock chamberElement : chamberList) {
+			chamberElement.initialize();
+			BlockConfig.add(chamberElement.getBlockInfo());
+		}
+
+		for(final WeaponBlock weaponElement : weaponList) {
+			weaponElement.initializeComputer();
+			weaponElement.initializeModule();
+
+			BlockConfig.add(weaponElement.getComputerInfo());
+			BlockConfig.add(weaponElement.getModuleInfo());
+
+			BlockConfig.registerComputerModulePair(weaponElement.getComputerId(), weaponElement.getModuleId());
+		}
 	}
 
-	public static ArrayList<Block> getAllBlocks() {
+	public static ArrayList<Block> getBlockList() {
 		return blockList;
 	}
 
@@ -38,13 +52,17 @@ public class ElementManager {
 		return chamberList;
 	}
 
+	public static ArrayList<WeaponBlock> getWeaponList() {
+		return weaponList;
+	}
+
 	public static Block getBlock(short id) {
-		for(Block blockElement : getAllBlocks()) if(blockElement.getBlockInfo().getId() == id) return blockElement;
+		for(Block blockElement : getBlockList()) if(blockElement.getBlockInfo().getId() == id) return blockElement;
 		return null;
 	}
 
 	public static Block getBlock(String blockName) {
-		for(Block block : getAllBlocks()) {
+		for(Block block : getBlockList()) {
 			if(block.getBlockInfo().getName().equalsIgnoreCase(blockName)) return block;
 		}
 		return null;
@@ -64,12 +82,30 @@ public class ElementManager {
 		return null;
 	}
 
+	public static WeaponBlock getWeapon(short id) {
+		for(WeaponBlock weapon : getWeaponList()) {
+			if(weapon.getComputerId() == id || weapon.getModuleId() == id) return weapon;
+		}
+		return null;
+	}
+
+	public static WeaponBlock getWeapon(String name) {
+		for(WeaponBlock weapon : getWeaponList()) {
+			if(weapon.getComputerInfo().getName().equalsIgnoreCase(name) || weapon.getModuleInfo().getName().equalsIgnoreCase(name)) return weapon;
+		}
+		return null;
+	}
+
 	public static void addBlock(Block block) {
 		blockList.add(block);
 	}
 
 	public static void addChamber(ChamberBlock chamber) {
 		chamberList.add(chamber);
+	}
+
+	public static void addWeapon(WeaponBlock weapon) {
+		weaponList.add(weapon);
 	}
 
 	public static ElementCategory getCategory(String path) {
@@ -91,14 +127,5 @@ public class ElementManager {
 		return category;
 	}
 
-	public static ElementInformation getInfo(String name) {
-		Block block = getBlock(name);
-		if(block != null) return block.getBlockInfo();
-		else {
-			for(ElementInformation elementInfo : ElementKeyMap.getInfoArray()) {
-				if(elementInfo.getName().equalsIgnoreCase(name)) return elementInfo;
-			}
-		}
-		return null;
-	}
+	public enum FactoryType {NONE, CAPSULE_REFINERY, MICRO_ASSEMBLER, BASIC_FACTORY, STANDARD_FACTORY, ADVANCED_FACTORY}
 }
