@@ -51,33 +51,31 @@ import java.util.zip.ZipInputStream;
  */
 public class BetterChambers extends StarMod {
 
+	public static final KeyboardMappings[] movementKeys = {KeyboardMappings.FORWARD_SHIP, KeyboardMappings.BACKWARDS_SHIP, KeyboardMappings.UP_SHIP, KeyboardMappings.DOWN_SHIP, KeyboardMappings.STRAFE_LEFT_SHIP, KeyboardMappings.STRAFE_RIGHT_SHIP};
+	public static long lastInputMs = 0;
+	public static int lastInput = -1;
+	public static BlockIconUtils iconUtils;
 	//Instance
 	private static BetterChambers instance;
-	public static BetterChambers getInstance() {
-		return instance;
-	}
-	public static void main(String[] args) {
-
-	}
+	//Other
+	private final String[] overwriteClasses = {"EffectAddOn", "StatusEffectCategory", "StatusEffectType"};
 	public BetterChambers() {
 
 	}
 
-	//Other
-	private final String[] overwriteClasses = {
-			"EffectAddOn",
-			"StatusEffectCategory",
-			"StatusEffectType",
-			"SingleBlockDrawer"
-	};
-	public static long lastInputMs = 0;
-	public static int lastInput = -1;
-	public static final KeyboardMappings[] movementKeys = {
-			KeyboardMappings.FORWARD_SHIP, KeyboardMappings.BACKWARDS_SHIP,
-			KeyboardMappings.UP_SHIP, KeyboardMappings.DOWN_SHIP,
-			KeyboardMappings.STRAFE_LEFT_SHIP, KeyboardMappings.STRAFE_RIGHT_SHIP
-	};
-	public static BlockIconUtils iconUtils;
+	public static BetterChambers getInstance() {
+		return instance;
+	}
+
+	public static void main(String[] args) {
+
+	}
+
+	@Override
+	public byte[] onClassTransform(String className, byte[] byteCode) {
+		for(String name : overwriteClasses) if(className.endsWith(name)) return overwriteClass(className, byteCode);
+		return super.onClassTransform(className, byteCode);
+	}
 
 	@Override
 	public void onEnable() {
@@ -90,14 +88,8 @@ public class BetterChambers extends StarMod {
 	}
 
 	@Override
-	public byte[] onClassTransform(String className, byte[] byteCode) {
-		for (String name : overwriteClasses) if (className.endsWith(name)) return overwriteClass(className, byteCode);
-		return super.onClassTransform(className, byteCode);
-	}
-
-	@Override
-	public void onResourceLoad(ResourceLoader loader) {
-		ResourceManager.loadResources();
+	public void onUniversalRegistryLoad() {
+		UniversalRegistry.registerURV(UniversalRegistry.RegistryType.PLAYER_USABLE_ID, getSkeleton(), "AuraProjectorChamber");
 	}
 
 	@Override
@@ -121,17 +113,15 @@ public class BetterChambers extends StarMod {
 	}
 
 	@Override
-	public void onUniversalRegistryLoad() {
-		UniversalRegistry.registerURV(UniversalRegistry.RegistryType.PLAYER_USABLE_ID, getSkeleton(), "AuraProjectorChamber");
+	public void onResourceLoad(ResourceLoader loader) {
+		ResourceManager.loadResources();
 	}
 
 	private void registerListeners() {
 		StarLoader.registerListener(RegisterWorldDrawersEvent.class, new Listener<RegisterWorldDrawersEvent>() {
 			@Override
 			public void onEvent(RegisterWorldDrawersEvent event) {
-				if(iconUtils == null) {
-					event.getModDrawables().add(iconUtils = new BlockIconUtils());
-				}
+				if(iconUtils == null) event.getModDrawables().add(iconUtils = new BlockIconUtils());
 			}
 		}, this);
 
@@ -162,7 +152,7 @@ public class BetterChambers extends StarMod {
 				int key = KeyboardMappings.getEventKeySingle(event.getRawEvent());
 				if(lastInput == key) {
 					if(System.currentTimeMillis() - lastInputMs < 150 && lastInputMs > 0) {
-						if(GameClient.getClientState() != null  && PlayerUtils.getCurrentControl(GameClient.getClientPlayerState()) instanceof ManagedUsableSegmentController<?> && GameClient.getClientState().isInFlightMode()) {
+						if(GameClient.getClientState() != null && PlayerUtils.getCurrentControl(GameClient.getClientPlayerState()) instanceof ManagedUsableSegmentController<?> && GameClient.getClientState().isInFlightMode()) {
 							for(KeyboardMappings keyboardMapping : movementKeys) {
 								if(keyboardMapping.getMapping() == key && keyboardMapping.isDown(GameClient.getClientState())) {
 									PacketUtil.sendPacketToServer(new SendThrustBlastPacket((ManagedUsableSegmentController<?>) PlayerUtils.getCurrentControl(GameClient.getClientPlayerState())));
@@ -194,18 +184,17 @@ public class BetterChambers extends StarMod {
 	private byte[] overwriteClass(String className, byte[] byteCode) {
 		byte[] bytes = null;
 		try {
-			ZipInputStream file =
-					new ZipInputStream(new FileInputStream(this.getSkeleton().getJarFile()));
-			while (true) {
+			ZipInputStream file = new ZipInputStream(new FileInputStream(this.getSkeleton().getJarFile()));
+			while(true) {
 				ZipEntry nextEntry = file.getNextEntry();
-				if (nextEntry == null) break;
-				if (nextEntry.getName().endsWith(className + ".class")) bytes = IOUtils.toByteArray(file);
+				if(nextEntry == null) break;
+				if(nextEntry.getName().endsWith(className + ".class")) bytes = IOUtils.toByteArray(file);
 			}
 			file.close();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		if (bytes != null) return bytes;
+		if(bytes != null) return bytes;
 		else return byteCode;
 	}
 }

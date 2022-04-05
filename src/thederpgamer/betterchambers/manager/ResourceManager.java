@@ -4,6 +4,7 @@ import api.utils.textures.StarLoaderTexture;
 import org.schema.schine.graphicsengine.forms.Sprite;
 import thederpgamer.betterchambers.BetterChambers;
 
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 /**
@@ -15,15 +16,19 @@ import java.util.HashMap;
 public class ResourceManager {
 
 	private static final String[] textureNames = {
-			"offense-chamber",
-			"offense-chamber-active",
-			"support-chamber",
-			"support-chamber-active",
+			"reactor-offense-chamber",
+			"reactor-offense-chamber-active",
+			"reactor-offense-chamber-icon",
+			"reactor-support-chamber",
+			"reactor-support-chamber-active",
+			"reactor-support-chamber-icon",
 			"aura-disruptor-computer-front",
 			"aura-disruptor-computer-side",
+			"aura-disruptor-computer-icon",
 			"aura-disruptor-module-front",
 			"aura-disruptor-module-side",
-			"aura-disruptor-module-top"
+			"aura-disruptor-module-top",
+			"aura-disruptor-module-icon"
 	};
 
 	private static final String[] spriteNames = {
@@ -42,7 +47,8 @@ public class ResourceManager {
 					String textureName = texturePath.substring(texturePath.lastIndexOf('/') + 1);
 					try {
 						if(textureName.endsWith("icon")) {
-							textureMap.put(textureName, StarLoaderTexture.newIconTexture(BetterChambers.getInstance().getJarBufferedImage("thederpgamer/betterchambers/resources/textures/" + texturePath + ".png")));
+							textureMap.put(textureName, StarLoaderTexture.newIconTexture(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
+							//textureMap.put(textureName, StarLoaderTexture.newIconTexture(BetterChambers.getInstance().getJarBufferedImage("thederpgamer/betterchambers/resources/textures/" + texturePath + ".png")));
 						} else {
 							textureMap.put(textureName, StarLoaderTexture.newBlockTexture(BetterChambers.getInstance().getJarBufferedImage("thederpgamer/betterchambers/resources/textures/" + texturePath + ".png")));
 						}

@@ -24,7 +24,8 @@ public class ReactorOffenseChamber extends Block {
 	@Override
 	public void initialize() {
 		if(GraphicsContext.initialized) {
-			short textureId = (short) ResourceManager.getTexture("offense-chamber").getTextureId();
+			blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-offense-chamber-icon").getTextureId());
+			short textureId = (short) ResourceManager.getTexture("reactor-offense-chamber").getTextureId();
 			blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 		}
 		blockInfo.setDescription("Reactor Chamber to enhance offensive capabilities.\nNeeds to be physically connected with a Power Reactor by using Reactor Conduit blocks.");

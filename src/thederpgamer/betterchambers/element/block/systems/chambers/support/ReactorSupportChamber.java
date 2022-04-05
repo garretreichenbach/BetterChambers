@@ -24,7 +24,8 @@ public class ReactorSupportChamber extends Block {
 	@Override
 	public void initialize() {
 		if(GraphicsContext.initialized) {
-			short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+			blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+			short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 			blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 		}
 		blockInfo.setDescription("Reactor Chamber to enhance support capabilities.\nNeeds to be physically connected with a Power Reactor by using Reactor Conduit blocks.");

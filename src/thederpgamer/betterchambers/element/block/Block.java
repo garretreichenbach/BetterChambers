@@ -16,6 +16,7 @@ public abstract class Block {
 
 	public Block(String name) {
 		blockInfo = BlockConfig.newElement(BetterChambers.getInstance(), name, new short[6]);
+		//blockInfo.setBlockStyle(BlockStyle.NORMAL.id);
 	}
 
 	public final ElementInformation getBlockInfo() {

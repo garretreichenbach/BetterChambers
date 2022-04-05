@@ -18,6 +18,8 @@ public abstract class WeaponBlock {
 	public WeaponBlock(String computerName, String moduleName) {
 		computerInfo = BlockConfig.newElement(BetterChambers.getInstance(), computerName, new short[6]);
 		moduleInfo = BlockConfig.newElement(BetterChambers.getInstance(), moduleName, new short[6]);
+		//computerInfo.setBlockStyle(BlockStyle.NORMAL.id);
+		//moduleInfo.setBlockStyle(BlockStyle.NORMAL.id);
 	}
 
 	public final ElementInformation getComputerInfo() {

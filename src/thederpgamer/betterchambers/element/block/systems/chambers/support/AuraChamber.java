@@ -23,7 +23,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Boosts the maximum range of active auras.");
@@ -48,7 +49,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Boosts the maximum range of active auras.");
@@ -72,7 +74,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Boosts the maximum range of active auras.");
@@ -95,7 +98,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Base chamber for Aura systems.");
@@ -120,7 +124,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Enables shield boosting effects for the Aura Projector.");
@@ -145,7 +150,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Boosts the shield capacity of ships affected by this aura.");
@@ -169,7 +175,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Further boosts the shield capacity of ships affected by this aura.");
@@ -192,7 +199,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Enables offensive effects for the Aura Projector.");
@@ -217,7 +225,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Boosts the AI range and accuracy of ships and turrets affected by this aura.");
@@ -241,7 +250,8 @@ public class AuraChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("support-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-support-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-support-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Further boosts the AI range and accuracy of ships and turrets affected by this aura.");

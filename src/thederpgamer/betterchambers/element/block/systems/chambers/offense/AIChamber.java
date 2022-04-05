@@ -23,7 +23,8 @@ public class AIChamber {
 		@Override
 		public void initialize() {
 			if(GraphicsContext.initialized) {
-				short textureId = (short) ResourceManager.getTexture("offense-chamber").getTextureId();
+				blockInfo.setBuildIconNum(ResourceManager.getTexture("reactor-offense-chamber-icon").getTextureId());
+				short textureId = (short) ResourceManager.getTexture("reactor-offense-chamber").getTextureId();
 				blockInfo.setTextureId(new short[] {textureId, textureId, textureId, textureId, textureId, textureId});
 			}
 			blockInfo.setDescription("Base increase for AI turret accuracy.");
