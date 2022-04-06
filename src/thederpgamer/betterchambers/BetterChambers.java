@@ -4,6 +4,7 @@ import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.draw.RegisterWorldDrawersEvent;
+import api.listener.events.entity.SegmentControllerInstantiateEvent;
 import api.listener.events.input.KeyPressEvent;
 import api.listener.events.register.ManagerContainerRegisterEvent;
 import api.listener.events.register.RegisterAddonsEvent;
@@ -12,12 +13,15 @@ import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.packets.PacketUtil;
 import api.utils.game.PlayerUtils;
+import api.utils.game.SegmentControllerUtils;
 import api.utils.registry.UniversalRegistry;
 import api.utils.textures.GraphicsOperator;
 import api.utils.textures.StarLoaderTexture;
 import org.apache.commons.io.IOUtils;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
+import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.schine.graphicsengine.core.GraphicsContext;
 import org.schema.schine.input.KeyboardMappings;
 import org.schema.schine.resource.ResourceLoader;
 import thederpgamer.betterchambers.element.ElementManager;
@@ -32,6 +36,7 @@ import thederpgamer.betterchambers.manager.EffectConfigManager;
 import thederpgamer.betterchambers.manager.LogManager;
 import thederpgamer.betterchambers.manager.ResourceManager;
 import thederpgamer.betterchambers.network.client.SendThrustBlastPacket;
+import thederpgamer.betterchambers.network.server.SendAuraPulsePacket;
 import thederpgamer.betterchambers.systems.chambers.support.AuraProjectorAddOn;
 import thederpgamer.betterchambers.systems.weapons.auradisruptor.AuraDisruptorBeamElementManager;
 import thederpgamer.betterchambers.utils.BlockIconUtils;
@@ -51,25 +56,25 @@ import java.util.zip.ZipInputStream;
  */
 public class BetterChambers extends StarMod {
 
+
+	//Instance
+	private static BetterChambers instance;
+	public BetterChambers() {
+
+	}
+	public static BetterChambers getInstance() {
+		return instance;
+	}
+	public static void main(String[] args) {
+
+	}
+
+	//Other
+	private final String[] overwriteClasses = {"EffectAddOn", "StatusEffectCategory", "StatusEffectType"};
 	public static final KeyboardMappings[] movementKeys = {KeyboardMappings.FORWARD_SHIP, KeyboardMappings.BACKWARDS_SHIP, KeyboardMappings.UP_SHIP, KeyboardMappings.DOWN_SHIP, KeyboardMappings.STRAFE_LEFT_SHIP, KeyboardMappings.STRAFE_RIGHT_SHIP};
 	public static long lastInputMs = 0;
 	public static int lastInput = -1;
 	public static BlockIconUtils iconUtils;
-	//Instance
-	private static BetterChambers instance;
-	//Other
-	private final String[] overwriteClasses = {"EffectAddOn", "StatusEffectCategory", "StatusEffectType"};
-	public BetterChambers() {
-
-	}
-
-	public static BetterChambers getInstance() {
-		return instance;
-	}
-
-	public static void main(String[] args) {
-
-	}
 
 	@Override
 	public byte[] onClassTransform(String className, byte[] byteCode) {
@@ -121,7 +126,7 @@ public class BetterChambers extends StarMod {
 		StarLoader.registerListener(RegisterWorldDrawersEvent.class, new Listener<RegisterWorldDrawersEvent>() {
 			@Override
 			public void onEvent(RegisterWorldDrawersEvent event) {
-				if(iconUtils == null) event.getModDrawables().add(iconUtils = new BlockIconUtils());
+				//if(iconUtils == null) event.getModDrawables().add(iconUtils = new BlockIconUtils());
 			}
 		}, this);
 
@@ -143,6 +148,15 @@ public class BetterChambers extends StarMod {
 			@Override
 			public void onEvent(RegisterAddonsEvent event) {
 				event.addModule(new AuraProjectorAddOn(event.getContainer()));
+			}
+		}, this);
+
+		StarLoader.registerListener(SegmentControllerInstantiateEvent.class, new Listener<SegmentControllerInstantiateEvent>() {
+			@Override
+			public void onEvent(SegmentControllerInstantiateEvent event) {
+				try {
+					SegmentControllerUtils.getAddon((ManagedSegmentController<?>) event.getController(), AuraProjectorAddOn.class).onReactorRecalibrate(null);
+				} catch(Exception ignored) { }
 			}
 		}, this);
 
@@ -170,15 +184,18 @@ public class BetterChambers extends StarMod {
 
 	private void registerPackets() {
 		PacketUtil.registerPacket(SendThrustBlastPacket.class);
+		PacketUtil.registerPacket(SendAuraPulsePacket.class);
 	}
 
 	private void overwriteTextures() {
-		StarLoaderTexture.addSpriteChange("gui/ingame/UI 64px ChamberTabs-4x4-gui-", new GraphicsOperator() {
-			@Override
-			public void apply(BufferedImage bufferedImage, Graphics graphics) {
-				bufferedImage.setData(getJarBufferedImage("thederpgamer/betterchambers/resources/sprites/reactor-chamber-tab-icons.png").getData());
-			}
-		});
+		if(GraphicsContext.initialized) {
+			StarLoaderTexture.addSpriteChange("gui/ingame/UI 64px ChamberTabs-4x4-gui-", new GraphicsOperator() {
+				@Override
+				public void apply(BufferedImage bufferedImage, Graphics graphics) {
+					bufferedImage.setData(getJarBufferedImage("thederpgamer/betterchambers/resources/sprites/reactor-chamber-tab-icons.png").getData());
+				}
+			});
+		}
 	}
 
 	private byte[] overwriteClass(String className, byte[] byteCode) {

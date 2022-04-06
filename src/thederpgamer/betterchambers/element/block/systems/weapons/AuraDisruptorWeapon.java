@@ -29,6 +29,7 @@ public class AuraDisruptorWeapon extends WeaponBlock {
 			short topTexture = ElementKeyMap.getInfo(4).getTextureId(2);
 			short bottomTexture = ElementKeyMap.getInfo(4).getTextureId(3);
 			computerInfo.setTextureId(new short[] {backTexture, frontTexture, topTexture, bottomTexture, sideTexture, sideTexture});
+			computerInfo.setBuildIconNum(ResourceManager.getTexture("aura-disruptor-computer-icon").getTextureId());
 		}
 		computerInfo.setDescription("Used to control Aura Disruptor Systems. Simply aim and fire at the enemy ship that is projecting the aura, and the effects of the aura will be reduced based on the size of the disruptor system relative to the strength of the aura itself.");
 		computerInfo.setPlacable(true);
@@ -50,6 +51,7 @@ public class AuraDisruptorWeapon extends WeaponBlock {
 			short sideTexture = (short) ResourceManager.getTexture("aura-disruptor-module-side").getTextureId();
 			short topTexture = (short) ResourceManager.getTexture("aura-disruptor-module-top").getTextureId();
 			moduleInfo.setTextureId(new short[] {frontTexture, sideTexture, topTexture, topTexture, sideTexture, sideTexture});
+			moduleInfo.setBuildIconNum(ResourceManager.getTexture("aura-disruptor-module-icon").getTextureId());
 		}
 		moduleInfo.setDescription("Acts as an output for Aura Disruptor Systems. Link to an Aura Disruptor Computer to use.");
 		moduleInfo.setPlacable(true);
