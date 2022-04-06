@@ -69,6 +69,7 @@ public class AIEffectGroup {
 				elementList.add(configElement);
 			}
 
+			/*
 			{ //Weapon Range
 				EffectConfigElement configElement = new EffectConfigElement();
 				configElement.init(StatusEffectType.WEAPON_RANGE);
@@ -79,6 +80,7 @@ public class AIEffectGroup {
 				configElement.value = value;
 				elementList.add(configElement);
 			}
+			 */
 
 			{ //Turret Accuracy
 				EffectConfigElement configElement = new EffectConfigElement();
