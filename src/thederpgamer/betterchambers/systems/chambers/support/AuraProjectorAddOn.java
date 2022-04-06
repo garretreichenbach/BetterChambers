@@ -4,10 +4,12 @@ import api.common.GameClient;
 import api.common.GameCommon;
 import api.common.GameServer;
 import api.listener.events.systems.ReactorRecalibrateEvent;
+import api.network.packets.PacketUtil;
 import api.utils.addon.SimpleAddOn;
 import api.utils.game.PlayerUtils;
 import api.utils.game.SegmentControllerUtils;
 import api.utils.sound.AudioUtils;
+import com.bulletphysics.linearmath.Transform;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
@@ -16,17 +18,22 @@ import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElem
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.player.faction.FactionRelation;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.game.server.data.GameServerState;
 import org.schema.game.server.data.ServerConfig;
+import org.schema.schine.graphicsengine.core.GlUtil;
 import thederpgamer.betterchambers.BetterChambers;
 import thederpgamer.betterchambers.effects.ConfigEffectGroup;
 import thederpgamer.betterchambers.element.ElementManager;
 import thederpgamer.betterchambers.manager.EffectConfigManager;
+import thederpgamer.betterchambers.network.server.SendAuraPulsePacket;
 import thederpgamer.betterchambers.utils.EntityUtils;
 
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuraProjectorAddOn extends SimpleAddOn {
 
-	public static final int UPDATE_TIMER = 1000;
+	public static final int UPDATE_TIMER = 500;
 	public static final int NONE = 0;
 	public static final int DEFENSE = 1;
 	public static final int OFFENSE = 2;
@@ -53,7 +60,6 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 	private int maxTargets = 0;
 	private float maxRange = 0.0f;
 	private float levelRatio = 1.0f;
-
 
 	public AuraProjectorAddOn(ManagerContainer<?> managerContainer) {
 		super(managerContainer, ElementManager.getChamber("Aura Projector").getId(), BetterChambers.getInstance(), "AuraProjectorChamber");
@@ -184,6 +190,7 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 	public void onActive() {
 		if(ticks >= UPDATE_TIMER) {
 			updateTargetList();
+			//drawPulse();
 			ticks = 0;
 		} else ticks++;
 	}
@@ -208,6 +215,25 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 		return isActive();
 	}
 
+	public void drawPulse() {
+		float radius = getSegmentController().getBoundingSphere().radius * 10.0f;
+		if(getState() instanceof GameClientState && GameClient.getClientState() != null) {
+			Transform transform = new Transform(segmentController.getWorldTransform());
+			Vector3f forward = new Vector3f();
+			Vector3f reverse = new Vector3f();
+			GlUtil.getForwardVector(forward, transform);
+			GlUtil.getBackVector(reverse, transform);
+			forward.sub(reverse);
+			Vector3f direction = new Vector3f(forward);
+			Vector3f color = GameCommon.getGameState().getFactionManager().getRelation(GameClient.getClientPlayerState().getFactionId(), getSegmentController().getFactionId()).defaultColor;
+			GameClient.getClientState().getPulseController().addPushPulse(segmentController.getWorldTransform(), direction, getSegmentController(), 0.0f, radius, getUsableId(), new Vector4f(color.x, color.y, color.z, 0.75f));
+		} else if(GameServer.getServerState() != null) {
+			for(PlayerState playerState : GameServer.getServerState().getPlayerStatesByName().values()) {
+				if(playerState.getCurrentSectorId() == getSegmentController().getSectorId()) PacketUtil.sendPacket(playerState, new SendAuraPulsePacket(getSegmentController(), radius, usableId));
+			}
+		}
+	}
+
 	public void updateTargetList() {
 		ArrayList<SegmentController> toRemove = new ArrayList<>();
 		for(Map.Entry<SegmentController, Boolean> entry : targetingEntities.entrySet()) {
@@ -227,7 +253,6 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 				}
 			}
 		}
-
 		addEntityEffects(); //Add any new valid targets
 	}
 
@@ -267,7 +292,7 @@ public class AuraProjectorAddOn extends SimpleAddOn {
 
 	public void disrupt(float hits, float disruptAmount) {
 		if(isActive() && !targetingEntities.isEmpty()) {
-			ticks = (int) (-1000 * disruptAmount);
+			ticks = (int) (-100 * disruptAmount);
 			if(getState() instanceof GameServerState) AudioUtils.serverPlaySound("0022_spaceship user - special synthetic weapon recharged 1", 10.0f, 1.0f, getAttachedPlayers());
 			else {
 				if(PlayerUtils.getCurrentControl(GameClient.getClientPlayerState()).equals(getSegmentController())) {
